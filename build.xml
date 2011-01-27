@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true"
+        	classpath="lib/jtools.jar:lib/pccomm.jar:lib/pctools.jar:lib/classes.jar"
+        	destdir="doc/Javadoc"
+        	doctitle="Lego Pac-man Robot"
+        	packagenames="pacman,pacman.behaviours,pacman.world"
+        	source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
