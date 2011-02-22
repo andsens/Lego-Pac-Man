@@ -1,9 +1,10 @@
 package pacman.world;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 /**
  * A tile of the world. It can be part of a wall, completely blank
@@ -13,7 +14,7 @@ import javax.swing.JComponent;
  * @author andsens
  * 
  */
-public class Tile extends JComponent {
+public class Tile extends JPanel {
 
 	/**
 	 * 
@@ -26,6 +27,7 @@ public class Tile extends JComponent {
 	public Tile(int character, int x, int y) {
 		this.x = x;
 		this.y = y;
+		this.setPreferredSize(new Dimension(16, 16));
 		switch (character) {
 		case 'o':
 			// Out-game tile
@@ -36,6 +38,7 @@ public class Tile extends JComponent {
 		case 'd':
 		case 'e':
 		case 'n':
+		case 'g':
 			// Navigable tile
 			this.navigable = true;
 		}
@@ -44,7 +47,10 @@ public class Tile extends JComponent {
 	@Override
 	public void paintComponent(Graphics g) {
 		if (navigable)
-			this.setBackground(Color.BLACK);
+			g.setColor(Color.GREEN);
+		else
+			g.setColor(Color.BLACK);
+		g.fillRect(0, 0, 16, 16);
 	}
 
 }

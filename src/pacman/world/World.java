@@ -1,6 +1,7 @@
 package pacman.world;
 
-import javax.swing.JFrame;
+import java.awt.Container;
+
 
 /**
  * World is the entire game board and the main class holding everything in the game.
@@ -9,17 +10,16 @@ import javax.swing.JFrame;
  * @author andsens
  * 
  */
-public class World extends JFrame {
+public class World {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -929497482909263536L;
+	private Map map;
 
 	public World(Map map) {
-		this.setTitle("Pac-Man control screen");
-		this.setSize(8 * map.getHeight(), 8 * map.getWidth());
-		this.add(map);
-		this.setVisible(true);
+
+	}
+
+	public void actualize() {
+		Container content = map.getContentPane();
+		content.paintComponents(content.getGraphics());
 	}
 }

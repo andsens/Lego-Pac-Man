@@ -1,11 +1,12 @@
 package pacman.world;
 
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JPanel;
+import javax.swing.JFrame;
 
 /**
  * A map detailing what the maze/world looks like.
@@ -13,7 +14,7 @@ import javax.swing.JPanel;
  * @author andsens, pchatelain
  * 
  */
-public class Map extends JPanel {
+public class Map extends JFrame {
 
 	/**
 	 * 
@@ -26,18 +27,21 @@ public class Map extends JPanel {
 	private int width;
 
 	public Map(File map) throws IOException {
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		Container content = this.getContentPane();
 		FileReader fileReader = new FileReader(map);
-		int i = 1;
+		int i = 0;
 		int j = 1;
-		for (int character = fileReader.read(); character == -1; character = fileReader.read()) {
+		int character = fileReader.read();
+		while (!(character == -1)) {
 			switch (character) {
-			case 13:
+			case 10:
 				if ((j > 1) && !(i == height)) {
 					System.err.println("Error in input file: map is not rectangular.");
 					System.exit(1);
 				}
-				height = i - 1;
-				i = 1;
+				height = i;
+				i = 0;
 				j++;
 				break;
 			case 'o':
@@ -45,15 +49,25 @@ public class Map extends JPanel {
 			case 'd':
 			case 'e':
 			case 'n':
-				this.add(new Tile(character, i, j));
+			case 'g':
+				i++;
+				content.add(new Tile(character, i, j));
 				break;
 			default:
 				System.err.println("Error in input file: unexpected character.");
 				System.exit(1);
 			}
+			character = fileReader.read();
 		}
-		width = j - 1;
-		this.setLayout(new GridLayout(height, width, 0, 0));
+		width = j;
+		this.setTitle("Pac-Man control screen");
+		this.setSize(16 * height, 16 * width);
+		this.setResizable(false);
+		content.setLayout(new GridLayout(width, height, 0, 0));
+		this.validate();
+		content.setVisible(true);
+		this.setVisible(true);
+		content.paintComponents(content.getGraphics());
 	}
 
 	public int getHeight() {

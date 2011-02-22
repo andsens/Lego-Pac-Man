@@ -18,7 +18,7 @@ public class Game implements ActionListener {
 	
 	public Game() throws IOException {
 		this.state = State.STOPPED;
-		this.world = new World(new Map(new File("../../maps/classic.txt")));
+		this.world = new World(new Map(new File("./maps/classic.txt")));
 		this.timer = new Timer(40, this);
 	}
 
@@ -51,20 +51,19 @@ public class Game implements ActionListener {
 		}
 	}
 
-	public static int main(String[] args) {
+	public static void main(String[] args) {
 		Game game;
 		try {
 			game = new Game();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 1;
 		}
-		return 0;
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		System.err.print(".");
 		if (e.getSource().equals(this.timer)) {
-			this.world.repaint();
+			this.world.actualize();
 		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {
 			if (e.getActionCommand().equals("s")) {
 				this.start();
