@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 public class Display extends JPanel implements ActionListener {
 
@@ -28,5 +28,4 @@ public class Display extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		this.repaint();
 	}
-	
 }

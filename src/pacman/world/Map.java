@@ -1,5 +1,6 @@
 package pacman.world;
 
+import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,24 +41,34 @@ public class Map extends JPanel {
 				j++;
 				break;
 			case 'o':
-				// create out-game tile
-				break;
 			case 'w':
-				// create wall
-				break;
 			case 'd':
-				// create navigable tile with dot
-				break;
 			case 'e':
-				// create navigable tile with energizer
-				break;
 			case 'n':
-				// create navigable tile
+				this.add(new Tile(character, i, j));
 				break;
 			default:
 				System.err.println("Error in input file: unexpected character.");
 				System.exit(1);
 			}
 		}
+		width = j - 1;
+		this.setLayout(new GridLayout(height, width, 0, 0));
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
 	}
 }
