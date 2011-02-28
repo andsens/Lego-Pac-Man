@@ -14,17 +14,15 @@ import java.util.Vector;
 public class World {
 
 	private Map map;
-	private Pacman pacman;
-	private Vector<Ghost> ghosts;
+	private Vector<Entity> entities;
 
 	public World(Map map) {
 
 	}
 
 	public void update() {
-		pacman.update();
-		for (Ghost ghost : ghosts) {
-			ghost.update();
+		for (Entity entity : entities) {
+			entity.update();
 		}
 	}
 

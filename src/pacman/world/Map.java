@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import tools.Sprite;
@@ -64,11 +65,11 @@ public class Map extends JFrame {
 		}
 		width = j;
 		this.setTitle("Pac-Man control screen");
-		this.setSize(16 * height, 16 * width);
+		this.setIconImage(ImageIO.read(new File("icon.png")));
+		this.setSize(12 * 28, 12 * 36);
 		this.setResizable(false);
 		content.setLayout(new GridLayout(width, height, 0, 0));
 		this.validate();
-		content.setVisible(true);
 		this.setVisible(true);
 		content.paintComponents(content.getGraphics());
 	}

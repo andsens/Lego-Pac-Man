@@ -8,6 +8,7 @@ import java.io.IOException;
 import javax.swing.JPanel;
 
 import tools.Sprite;
+import tools.Sprite.SpriteSize;
 
 /**
  * A tile of the world. It can be part of a wall, completely blank
@@ -27,43 +28,50 @@ public class Tile extends JPanel {
 	private boolean navigable;
 	private Sprite sprite;
 	private Point spriteTile;
+	private SpriteSize spriteSize;
 
 	public Tile(int character, int x, int y, Sprite sprite) throws IOException {
 		this.sprite = sprite;
 		this.x = x;
 		this.y = y;
-		this.setPreferredSize(new Dimension(16, 16));
+		this.setPreferredSize(new Dimension(12, 12));
 		switch (character) {
 		case 'o':
 			// Out-of-game tile
-			this.spriteTile = new Point(22, 0);
+			this.spriteSize = SpriteSize.BIG;
+			this.spriteTile = new Point(0, 4);
 			break;
 		case 'w':
 			// Wall tile
-			this.spriteTile = new Point(21, 6);
+			this.spriteSize = SpriteSize.BIG;
+			this.spriteTile = new Point(8, 3);
 			// this.navigable = false;
 			break;
 		case 'd':
 			// Tile with a dot
-			this.spriteTile = new Point(17, 0);
+			this.spriteSize = SpriteSize.SMALL;
+			this.spriteTile = new Point(16, 0);
 			break;
 		case 'e':
 			// Tile with an energizer
-			this.spriteTile = new Point(0, 17);
+			this.spriteSize = SpriteSize.SMALL;
+			this.spriteTile = new Point(18, 0);
 			break;
 		case 'n':
 			// Empty navigable tile
-			this.spriteTile = new Point(22, 0);
+			this.spriteSize = SpriteSize.BIG;
+			this.spriteTile = new Point(0, 4);
 			break;
 		case 'g':
 			// Ghost house
-			this.spriteTile = new Point(22, 0);
+			this.spriteSize = SpriteSize.BIG;
+			this.spriteTile = new Point(0, 4);
 		}
 	}
 
 	@Override
 	public void paintComponent(Graphics g) {
-		sprite.draw(spriteTile.x, spriteTile.y, g);
+		sprite.draw(spriteTile.x, spriteTile.y, g, spriteSize);
 	}
 
 }
