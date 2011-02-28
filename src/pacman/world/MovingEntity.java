@@ -1,5 +1,7 @@
 package pacman.world;
 
+import java.awt.Point;
+
 import pacman.behaviours.Behaviour;
 
 /**
@@ -11,8 +13,36 @@ import pacman.behaviours.Behaviour;
  */
 public class MovingEntity extends Entity {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5115554255945990447L;
+
+	private Point position;
+	private Point speed;
+
 	public MovingEntity(Behaviour behaviour) {
 
+	}
+
+	public void update() {
+		position.translate(speed.x, speed.y);
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setSpeed(Point speed) {
+		this.speed = speed;
+	}
+
+	public Point getSpeed() {
+		return speed;
 	}
 
 }

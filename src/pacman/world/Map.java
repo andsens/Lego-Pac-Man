@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.swing.JFrame;
 
+import tools.Sprite;
+
 /**
  * A map detailing what the maze/world looks like.
  * 
@@ -27,6 +29,7 @@ public class Map extends JFrame {
 	private int width;
 
 	public Map(File map) throws IOException {
+		Sprite sprite = new Sprite("sprite.png");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		Container content = this.getContentPane();
 		FileReader fileReader = new FileReader(map);
@@ -51,7 +54,7 @@ public class Map extends JFrame {
 			case 'n':
 			case 'g':
 				i++;
-				content.add(new Tile(character, i, j));
+				content.add(new Tile(character, i, j, sprite));
 				break;
 			default:
 				System.err.println("Error in input file: unexpected character.");

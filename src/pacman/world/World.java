@@ -1,6 +1,7 @@
 package pacman.world;
 
 import java.awt.Container;
+import java.util.Vector;
 
 
 /**
@@ -13,12 +14,21 @@ import java.awt.Container;
 public class World {
 
 	private Map map;
+	private Pacman pacman;
+	private Vector<Ghost> ghosts;
 
 	public World(Map map) {
 
 	}
 
-	public void actualize() {
+	public void update() {
+		pacman.update();
+		for (Ghost ghost : ghosts) {
+			ghost.update();
+		}
+	}
+
+	public void display() {
 		Container content = map.getContentPane();
 		content.paintComponents(content.getGraphics());
 	}

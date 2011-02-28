@@ -63,7 +63,7 @@ public class Game implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.err.print(".");
 		if (e.getSource().equals(this.timer)) {
-			this.world.actualize();
+			this.world.update();
 		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {
 			if (e.getActionCommand().equals("s")) {
 				this.start();
