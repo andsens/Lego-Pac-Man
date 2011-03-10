@@ -15,10 +15,10 @@
 // L = Wall Down left
 // R = Wall Down right
 // x = Wall up right
-// H = Horizontal wall up (double)
-// h = Horizontal wall down (double)
-// V = Vertical wall left (double)
-// v = Vertical wall right (double)
+// H = Wall up (double)
+// h = Wall down (double)
+// V = Wall left (double)
+// v = Wall right (double)
 // y = Wall up left (double)
 // z = Wall down left (double)
 // w = Wall up right (double)
@@ -29,10 +29,16 @@
 // s = Wall down right (double, rectangular)
 // m = Wall up stop right (double, rectangular)
 // n = Wall up stop left (double, rectangular)
+// f = Wall split down right
+// a = Wall split down left
+// h = Wall split left up
+// b = Wall split left down
+// i = Wall split right up
+// c = Wall split right down
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
-yhhhhhhhhhhhhwyhhhhhhhhhhhhw
+yhhhhhhhhhhhhafhhhhhhhhhhhhw
 vDDDDDDDDDDDDlrDDDDDDDDDDDDV
 vDUuuxDUuuuxDlrDUuuuxDUuuxDV
 vEloorDlooorDlrDlooorDloorEV
@@ -41,23 +47,23 @@ vDDDDDDDDDDDDDDDDDDDDDDDDDDV
 vDUuuxDUxDUuuuuuuxDUxDUuuxDV
 vDLddRDlrDLddxUddRDlrDLddRDV
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
-zHHHHwDlLuuxelreUuuRrDyHHHHt
-oooooVDlUddReLReLddxrDvooooo
-oooooVDlreeeeeeeeeelrDvooooo
-oooooVDlrejHmggnHkelrDvooooo
-oooooVDLReVggggggveLRDvooooo
-oooooVDeeeVggggggveeeDvooooo
-oooooVDUxeVggggggveUxDvooooo
-oooooVDlreqhhhhhhselrDvooooo
-oooooVDlreeeeeeeeeelrDvooooo
-oooooVDlreUuuuuuuxelrDvooooo
-yhhhhtDLReLddxUddReLRDzhhhhw
+zHHHHxDlLuuxelreUuuRrDUHHHHt
+ooooovDlUddReLReLddxrDVooooo
+ooooovDlreeeeeeeeeelrDVooooo
+ooooovDlrejHmggnHkelrDVooooo
+ooooovDLReVggggggveLRDVooooo
+ooooovDeeeVggggggveeeDVooooo
+ooooovDUxeVggggggveUxDVooooo
+ooooovDlreqhhhhhhselrDVooooo
+ooooovDlreeeeeeeeeelrDVooooo
+ooooovDlreUuuuuuuxelrDVooooo
+yhhhhRDLReLddxUddReLRDLhhhhw
 vDDDDDDDDDDDDlrDDDDDDDDDDDDV
 vDUuuxDUuuuxDlrDUuuuxDUuuxDV
 vDLdxrDLdddRDLRDLdddRDlUdRDV
 vEDDlrDDDDDDDeeDDDDDDDlrDDEV
-zuxDlrDUxDUuuuuuuxDUxDlrDUut
-ydRDLRDlrDLddxUddRDlrDLRDLdw
+iuxDlrDUxDUuuuuuuxDUxDlrDUuA
+cdRDLRDlrDLddxUddRDlrDLRDLdb
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
 vDUuuuuRLuuxDlrDUuuRLuuuuxDV
 vDLddddddddRDLRDLddddddddRDV
