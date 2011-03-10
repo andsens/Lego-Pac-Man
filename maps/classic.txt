@@ -1,36 +1,67 @@
+// o = Out of bounds
+// e = Empty tile
+// D = Dot
+// E = Energizer
+// P = Pacman
+// B = Blinky
+// p = Pinky
+// I = Inky
+// C = Clyde
+// u = Wall up
+// l = Wall left
+// d = Wall Down
+// r = Wall right
+// U = Wall up left
+// L = Wall Down left
+// R = Wall Down right
+// x = Wall up right
+// H = Horizontal wall up (double)
+// h = Horizontal wall down (double)
+// V = Vertical wall left (double)
+// v = Vertical wall right (double)
+// y = Wall up left (double)
+// z = Wall down left (double)
+// w = Wall up right (double)
+// t = Wall down right (double)
+// j = Wall up left (double, rectangular)
+// q = Wall down left (double, rectangular)
+// k = Wall up right (double, rectangular)
+// s = Wall down right (double, rectangular)
+// m = Wall up stop right (double, rectangular)
+// n = Wall up stop left (double, rectangular)
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
-wwwwwwwwwwwwwwwwwwwwwwwwwwww
-wddddddddddddwwddddddddddddw
-wdwwwwdwwwwwdwwdwwwwwdwwwwdw
-wewwwwdwwwwwdwwdwwwwwdwwwwew
-wdwwwwdwwwwwdwwdwwwwwdwwwwdw
-wddddddddddddddddddddddddddw
-wdwwwwdwwdwwwwwwwwdwwdwwwwdw
-wdwwwwdwwdwwwwwwwwdwwdwwwwdw
-wddddddwwddddwwddddwwddddddw
-wwwwwwdwwwwwnwwnwwwwwdwwwwww
-ooooowdwwwwwnwwnwwwwwdwooooo
-ooooowdwwnnnnnnnnnnwwdwooooo
-ooooowdwwnwwwggwwwnwwdwooooo
-wwwwwwdwwnwggggggwnwwdwwwwww
-nnnnnndnnnwggggggwnnndnnnnnn
-wwwwwwdwwnwggggggwnwwdwwwwww
-ooooowdwwnwwwwwwwwnwwdwooooo
-ooooowdwwnnnnnnnnnnwwdwooooo
-ooooowdwwnwwwwwwwwnwwdwooooo
-wwwwwwdwwnwwwwwwwwnwwdwwwwww
-wddddddddddddwwddddddddddddw
-wdwwwwdwwwwwdwwdwwwwwdwwwwdw
-wdwwwwdwwwwwdwwdwwwwwdwwwwdw
-weddwwdddddddnndddddddwwddew
-wwwdwwdwwdwwwwwwwwdwwdwwdwww
-wwwdwwdwwdwwwwwwwwdwwdwwdwww
-wddddddwwddddwwddddwwddddddw
-wdwwwwwwwwwwdwwdwwwwwwwwwwdw
-wdwwwwwwwwwwdwwdwwwwwwwwwwdw
-wddddddddddddddddddddddddddw
-wwwwwwwwwwwwwwwwwwwwwwwwwwww
+yhhhhhhhhhhhhwyhhhhhhhhhhhhw
+vDDDDDDDDDDDDlrDDDDDDDDDDDDV
+vDUuuxDUuuuxDlrDUuuuxDUuuxDV
+vEloorDlooorDlrDlooorDloorEV
+vDLddRDLdddRDLRDLdddRDLddRDV
+vDDDDDDDDDDDDDDDDDDDDDDDDDDV
+vDUuuxDUxDUuuuuuuxDUxDUuuxDV
+vDLddRDlrDLddxUddRDlrDLddRDV
+vDDDDDDlrDDDDlrDDDDlrDDDDDDV
+zHHHHwDlLuuxelreUuuRrDyHHHHt
+oooooVDlUddReLReLddxrDvooooo
+oooooVDlreeeeeeeeeelrDvooooo
+oooooVDlrejHmggnHkelrDvooooo
+oooooVDLReVggggggveLRDvooooo
+oooooVDeeeVggggggveeeDvooooo
+oooooVDUxeVggggggveUxDvooooo
+oooooVDlreqhhhhhhselrDvooooo
+oooooVDlreeeeeeeeeelrDvooooo
+oooooVDlreUuuuuuuxelrDvooooo
+yhhhhtDLReLddxUddReLRDzhhhhw
+vDDDDDDDDDDDDlrDDDDDDDDDDDDV
+vDUuuxDUuuuxDlrDUuuuxDUuuxDV
+vDLdxrDLdddRDLRDLdddRDlUdRDV
+vEDDlrDDDDDDDeeDDDDDDDlrDDEV
+zuxDlrDUxDUuuuuuuxDUxDlrDUut
+ydRDLRDlrDLddxUddRDlrDLRDLdw
+vDDDDDDlrDDDDlrDDDDlrDDDDDDV
+vDUuuuuRLuuxDlrDUuuRLuuuuxDV
+vDLddddddddRDLRDLddddddddRDV
+vDDDDDDDDDDDDDDDDDDDDDDDDDDV
+zHHHHHHHHHHHHHHHHHHHHHHHHHHt
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo

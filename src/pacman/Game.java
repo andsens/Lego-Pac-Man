@@ -2,12 +2,10 @@ package pacman;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 
 import javax.swing.Timer;
 
-import pacman.world.Map;
 import pacman.world.World;
 
 public class Game implements ActionListener {
@@ -18,8 +16,10 @@ public class Game implements ActionListener {
 	
 	public Game() throws IOException {
 		this.state = State.STOPPED;
-		this.world = new World(new Map(new File("./maps/classic.txt")));
+		this.world = new World();
 		this.timer = new Timer(40, this);
+		timer.addActionListener(this);
+//		 start();
 	}
 
 	public void start() {
@@ -61,7 +61,7 @@ public class Game implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		System.err.print(".");
+		System.out.print(".");
 		if (e.getSource().equals(this.timer)) {
 			this.world.update();
 		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {

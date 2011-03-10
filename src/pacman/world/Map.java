@@ -1,15 +1,18 @@
 package pacman.world;
 
-import java.awt.Container;
-import java.awt.GridLayout;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-import tools.Sprite;
+import pacman.world.graphics.Sprite;
+import pacman.world.tiles.EmptyTile;
+import pacman.world.tiles.GhostHouseTile;
+import pacman.world.tiles.NavigableTile;
+import pacman.world.tiles.Tile;
+import pacman.world.tiles.WallTile;
+
 
 /**
  * A map detailing what the maze/world looks like.
@@ -17,7 +20,7 @@ import tools.Sprite;
  * @author andsens, pchatelain
  * 
  */
-public class Map extends JFrame {
+public class Map extends JPanel {
 
 	/**
 	 * 
@@ -26,52 +29,45 @@ public class Map extends JFrame {
 	/**
 	 * Classic is 28x36, explained in <a href="../../../Pac-Man Dossier/index.html#Chapter_3">Maze Logic 101</a>
 	 */
-	private int height;
 	private int width;
+	private int height;
 
 	public Map(File map) throws IOException {
+		setLayout(null);
 		Sprite sprite = new Sprite("sprite.png");
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Container content = this.getContentPane();
+		Tile.setSprite(sprite);
 		FileReader fileReader = new FileReader(map);
-		int i = 0;
-		int j = 1;
-		int character = fileReader.read();
-		while (!(character == -1)) {
-			switch (character) {
-			case 10:
-				if ((j > 1) && !(i == height)) {
+		int x = 0;
+		int y = 0;
+		int character;
+		main: while ((character = fileReader.read()) != -1) {
+			if(character == '/') {
+				while ((character = fileReader.read()) != 10)
+					if(character == -1)
+						break main;
+			} else if(character == '\n') {
+				if (y > 0 && x != width) {
 					System.err.println("Error in input file: map is not rectangular.");
 					System.exit(1);
 				}
-				height = i;
-				i = 0;
-				j++;
-				break;
-			case 'o':
-			case 'w':
-			case 'd':
-			case 'e':
-			case 'n':
-			case 'g':
-				i++;
-				content.add(new Tile(character, i, j, sprite));
-				break;
-			default:
-				System.err.println("Error in input file: unexpected character.");
-				System.exit(1);
+				width = x;
+				x = 0;
+				y++;
+			} else {
+				Tile tile = Tile.createTile(character);
+				if(tile == null) {
+					System.err.println("Error in input file: unexpected character '"+character+"'.");
+					System.exit(1);
+				}
+				tile.setLocation(x * Tile.width, y * Tile.height);
+				add(tile);
+				x++;
 			}
-			character = fileReader.read();
 		}
-		width = j;
-		this.setTitle("Pac-Man control screen");
-		this.setIconImage(ImageIO.read(new File("icon.png")));
-		this.setSize(12 * 28, 12 * 36);
-		this.setResizable(false);
-		content.setLayout(new GridLayout(width, height, 0, 0));
-		this.validate();
-		this.setVisible(true);
-		content.paintComponents(content.getGraphics());
+		height = y;
+		setSize(width * Tile.width, height * Tile.height);
+		validate();
+		setVisible(true);
 	}
 
 	public int getHeight() {
