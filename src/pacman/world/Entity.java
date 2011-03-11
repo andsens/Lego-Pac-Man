@@ -1,8 +1,7 @@
 package pacman.world;
 
-import java.awt.Point;
-
 import pacman.world.graphics.Graphic;
+import pacman.world.maps.Coordinate;
 
 /**
  * An object in the level. This can be a simple dot or Pac-man.
@@ -12,20 +11,13 @@ import pacman.world.graphics.Graphic;
  */
 public abstract class Entity extends Graphic {
 	
+	public Entity(Coordinate coordinate) {
+		super(coordinate);
+	}
+
 	private static final long serialVersionUID = 735990140079476872L;
 	
-	private Point position;
-	
-	
-	public void update() {
+	public void tick() {
 
-	}
-	
-	public void setPosition(Point position) {
-		this.position = position;
-	}
-	
-	public Point getPosition() {
-		return position;
 	}
 }

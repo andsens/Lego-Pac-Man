@@ -3,15 +3,17 @@ package pacman.world;
 import java.awt.Container;
 import java.io.File;
 import java.io.IOException;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import pacman.world.graphics.Graphic;
 import pacman.world.graphics.Sprite;
+import pacman.world.maps.DotMap;
+import pacman.world.maps.MovingEntityMap;
+import pacman.world.maps.TypeMap;
+import pacman.world.maps.WallMap;
 import pacman.world.tiles.Tile;
-import pacman.world.tiles.Type;
 
 
 /**
@@ -24,13 +26,13 @@ import pacman.world.tiles.Type;
 public class World extends JFrame {
 
 	private static final long serialVersionUID = -7706020584659519598L;
-	private Map map;
+	private TypeMap map;
 	private WallMap wallMap;
 	private DotMap dotMap;
-	private Vector<Entity> entities;
+	private MovingEntityMap movingEntityMap;
 
 	public World() throws IOException {
-		map = new Map(new File("./maps/classic.txt"));
+		map = new TypeMap(new File("./maps/classic.txt"));
 		
 		Sprite sprite = new Sprite("sprite.png");
 		Graphic.setSprite(sprite);
@@ -43,19 +45,22 @@ public class World extends JFrame {
 		
 		Container layers = getLayeredPane();
 
-		wallMap = new WallMap(map, sprite);
+		wallMap = new WallMap(map);
 		layers.add(wallMap, new Integer(1));
 		
-		dotMap = new DotMap(map, sprite);
+		dotMap = new DotMap(map);
 		layers.add(dotMap, new Integer(2));
+		
+		movingEntityMap = new MovingEntityMap(map);
+		layers.add(movingEntityMap, new Integer(3));
 
 		setVisible(true);
 		layers.paintComponents(layers.getGraphics());
 	}
 
-	public void update() {
-		Container layers = getLayeredPane();
-		layers.update(layers.getGraphics());
+	public void tick() {
+		dotMap.tick();
+		movingEntityMap.tick();
 		// for (Entity entity : entities) {
 		// entity.update();
 		// }

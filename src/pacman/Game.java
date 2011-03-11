@@ -19,7 +19,6 @@ public class Game implements ActionListener {
 		this.world = new World();
 		this.timer = new Timer(40, this);
 		timer.addActionListener(this);
-//		 start();
 	}
 
 	public void start() {
@@ -63,14 +62,12 @@ public class Game implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.print(".");
 		if (e.getSource().equals(this.timer)) {
-			this.world.update();
+			world.tick();
 		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {
-			if (e.getActionCommand().equals("s")) {
-				this.start();
-			}
-			if (e.getActionCommand().equals("p")) {
-				this.pause();
-			}
+			if (e.getActionCommand().equals("s"))
+				start();
+			if (e.getActionCommand().equals("p"))
+				pause();
 		}
 	}
 }

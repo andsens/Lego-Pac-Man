@@ -1,6 +1,9 @@
 package pacman.world;
 
+import java.awt.Point;
+
 import pacman.behaviours.Behaviour;
+import pacman.world.maps.Coordinate;
 
 /**
  * Represents Pac-man in the level.
@@ -10,9 +13,13 @@ import pacman.behaviours.Behaviour;
  */
 public class Pacman extends MovingEntity {
 
-	public Pacman(Behaviour behaviour) {
-		super(behaviour);
-		// TODO Auto-generated constructor stub
+	private static final long serialVersionUID = 4731453043247286964L;
+
+	public Pacman(Coordinate coordinate, Behaviour behaviour) {
+		super(coordinate, behaviour);
+		coordinate.translate(1, -5);
+		setLocation(coordinate);
+		spriteTile = new Point(0, 16);
 	}
 
 }

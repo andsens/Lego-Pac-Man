@@ -1,5 +1,7 @@
 // o = Out of bounds
 // e = Empty tile
+// g = Ghosthouse
+// G = Ghosthouse Barrier
 // D = Dot
 // E = Energizer
 // P = Pacman
@@ -49,10 +51,10 @@ vDLddRDlrDLddxUddRDlrDLddRDV
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
 zHHHHxDlLuuxelreUuuRrDUHHHHt
 ooooovDlUddReLReLddxrDVooooo
-ooooovDlreeeeeeeeeelrDVooooo
-ooooovDlrejHmggnHkelrDVooooo
+ooooovDlreeeeeBeeeelrDVooooo
+ooooovDlrejHmGGnHkelrDVooooo
 ooooovDLReVggggggveLRDVooooo
-ooooovDeeeVggggggveeeDVooooo
+ooooovDeeeVgIgCgpveeeDVooooo
 ooooovDUxeVggggggveUxDVooooo
 ooooovDlreqhhhhhhselrDVooooo
 ooooovDlreeeeeeeeeelrDVooooo
@@ -61,7 +63,7 @@ yhhhhRDLReLddxUddReLRDLhhhhw
 vDDDDDDDDDDDDlrDDDDDDDDDDDDV
 vDUuuxDUuuuxDlrDUuuuxDUuuxDV
 vDLdxrDLdddRDLRDLdddRDlUdRDV
-vEDDlrDDDDDDDeeDDDDDDDlrDDEV
+vEDDlrDDDDDDDPeDDDDDDDlrDDEV
 iuxDlrDUxDUuuuuuuxDUxDlrDUuA
 cdRDLRDlrDLddxUddRDlrDLRDLdb
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
