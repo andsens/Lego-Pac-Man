@@ -3,12 +3,9 @@ package pacman.world;
 import java.awt.Point;
 
 import pacman.behaviours.Behaviour;
-import pacman.behaviours.Blinky;
-import pacman.behaviours.Clyde;
-import pacman.behaviours.Inky;
-import pacman.behaviours.Pinky;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
+import pacman.world.maps.Type;
 
 /**
  * Represents a ghost in the level.
@@ -20,20 +17,24 @@ public class Ghost extends MovingEntity {
 
 	private static final long serialVersionUID = -6871946560948009615L;
 	
-	public Ghost(Coordinate coordinate, Behaviour behaviour) {
+	public Ghost(Coordinate coordinate, Behaviour behaviour, Type type) {
 		super(coordinate, behaviour);
 		coordinate.translate(-10, -5);
 		setLocation(coordinate);
-		if(behaviour instanceof Blinky)
+		switch(type) {
+		case BLINKY:
 			spriteTile = new Point(10, 14);
-		else if(behaviour instanceof Pinky)
+			break;
+		case PINKY:
 			spriteTile = new Point(6, 18);
-		else if(behaviour instanceof Inky)
+			break;
+		case INKY:
 			spriteTile = new Point(30, 18);
-		else if(behaviour instanceof Clyde)
+			break;
+		case CLYDE:
 			spriteTile = new Point(6, 20);
-		else
-			spriteTile = new Point(10, 14);
+			break;
+		}
 	}
 
 	protected Direction getMove(World world) {

@@ -16,37 +16,50 @@ import pacman.world.maps.Direction;
  */
 public class Pacman extends Behaviour implements KeyListener {
 	
+	long resetNext = -1;
 	Direction heading = Direction.NONE;
 	public Direction getMove(World world) {
-		if(nextDirection != null) {
-			if(canMove(world, nextDirection)) {
-				heading = nextDirection;
-				nextDirection = null;
-			} else {
-				Direction diagonal = nextDirection.turn(false, true);
-				if(canMove(world, diagonal)) {
-					heading = diagonal;
-				} else {
-					diagonal = nextDirection.turn(true, true);
-					if(canMove(world, diagonal))
-						heading = diagonal;
-				}
+		Direction go = null;
+		if(resetNext > 500)
+			nextDirection = null;
+		if(nextDirection != null
+		&& canMove(world, nextDirection)) {
+			heading = nextDirection;
+			nextDirection = null;
+		} else {
+			Direction diagonal = heading.turn(nextDirection);
+			if(diagonal != Direction.NONE
+			&& canMove(world, diagonal)) {
+				resetNext = -1;
+				go = diagonal;
 			}
 		}
-		if(!canMove(world, heading))
-			heading = Direction.NONE;
-		return heading;
+		if(go == null)
+			go = heading;
+		if(!canMove(world, go)) {
+			go = Direction.NONE;
+			heading = go;
+		}
+		return go;
 	}
 	
 	Direction nextDirection;
 	public void keyPressed(KeyEvent event) {
-		nextDirection = Direction.getKeyTranslation(event);
+		if(Direction.getKeyTranslation(event) != null) {
+			resetNext = -1;
+			nextDirection = Direction.getKeyTranslation(event);
+		}
 	}
 
 	public void keyReleased(KeyEvent event) {
-		nextDirection = null;
+		if(Direction.getKeyTranslation(event) != null)
+			resetNext = System.currentTimeMillis();
 	}
 
 	public void keyTyped(KeyEvent event) {
+	}
+
+	public void reset() {
+		heading = Direction.NONE;
 	}
 }

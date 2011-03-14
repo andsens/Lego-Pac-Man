@@ -1,5 +1,7 @@
 package pacman.world;
 
+import java.awt.Point;
+
 import pacman.world.graphics.Graphic;
 import pacman.world.maps.Coordinate;
 
@@ -9,11 +11,18 @@ import pacman.world.maps.Coordinate;
  * @author andsens
  * 
  */
-public abstract class Entity extends Graphic{
+public abstract class Entity extends Graphic {
+	
+	private static final long serialVersionUID = 735990140079476872L;
+	
+	Point originalLocation;
 	
 	public Entity(Coordinate coordinate) {
 		super(coordinate);
+		originalLocation = coordinate;
 	}
-
-	private static final long serialVersionUID = 735990140079476872L;
+	
+	public void reset() {
+		setLocation(originalLocation);
+	}
 }

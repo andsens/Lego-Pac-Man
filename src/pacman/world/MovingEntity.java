@@ -71,6 +71,11 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 		}
 	}
 	
+	public void reset() {
+		super.reset();
+		behaviour.reset();
+	}
+	
 	public abstract boolean canMove(World world, Direction direction);
 	
 	protected abstract Direction getMove(World world);

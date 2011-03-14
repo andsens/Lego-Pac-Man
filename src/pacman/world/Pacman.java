@@ -35,7 +35,31 @@ public class Pacman extends MovingEntity {
 		Point location = getLocation();
 		location.translate(width/2, height/2);
 		move.translate(location);
-		return world.isValidPacmanLocation(location);
+		if(!world.isValidPacmanLocation(location))
+			return false;
+		if(move.isDiagonal()) {
+			Point straight = (Point) location.clone();
+			move.translate(straight);
+			if(world.isValidPacmanLocation(straight))
+				return true;
+			Point ccw = (Point) location.clone();
+			move.nudge().translate(ccw);
+			Point cc = (Point) location.clone();
+			move.nudge(true).translate(cc);
+			return world.isValidPacmanLocation(ccw) || world.isValidPacmanLocation(cc);
+		} else {
+			Point straight = (Point) location.clone();
+			move.translate(straight);
+			if(world.isValidPacmanLocation(straight))
+				return true;
+			Point ccw = (Point) location.clone();
+			move.turn().translate(ccw);
+			move.turn().translate(ccw);
+			Point cc = (Point) location.clone();
+			move.turn(true).translate(cc);
+			move.turn(true).translate(cc);
+			return world.isValidPacmanLocation(ccw) || world.isValidPacmanLocation(cc);
+		}
 	}
 	
 	protected int getSpeed() {

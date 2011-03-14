@@ -23,4 +23,6 @@ public abstract class Behaviour {
 	}
 	
 	public abstract Direction getMove(World world);
+
+	public abstract void reset();
 }
