@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.Timer;
 
+import pacman.behaviours.RandomBehaviourFactory;
 import pacman.world.World;
 
 public class Game implements ActionListener {
@@ -16,23 +17,24 @@ public class Game implements ActionListener {
 	
 	public Game() throws IOException {
 		this.state = State.STOPPED;
-		this.world = new World();
-		this.timer = new Timer(40, this);
+		this.world = new World(new RandomBehaviourFactory());
+		this.timer = new Timer(20, this);
 		timer.addActionListener(this);
+		start();
 	}
 
 	public void start() {
-		this.state = State.STARTED;
+		state = State.RUNNING;
 		timer.start();
 	}
 	
 	public void stop() {
-		this.state = State.STOPPED;
+		state = State.STOPPED;
 		timer.stop();
 	}
 
 	public void pause() {
-		this.state = State.PAUSED;
+		state = State.PAUSED;
 		timer.stop();
 	}
 
@@ -41,33 +43,26 @@ public class Game implements ActionListener {
 	}
 
 	enum State {
-		STOPPED(0), STARTED(1), PAUSED(2);
+		STOPPED, RUNNING, PAUSED;
+	}
 
-		private int state;
-
-		State(int state) {
-			this.state = state;
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource().equals(this.timer)) {
+			world.tick();
+		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {
+			if (e.getActionCommand().equals(" "))
+				if(state == State.RUNNING)
+					pause();
+				else
+					start();
 		}
 	}
 
 	public static void main(String[] args) {
-		Game game;
 		try {
-			game = new Game();
+			new Game();
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		System.out.print(".");
-		if (e.getSource().equals(this.timer)) {
-			world.tick();
-		} else if (e.getID() == ActionEvent.KEY_EVENT_MASK) {
-			if (e.getActionCommand().equals("s"))
-				start();
-			if (e.getActionCommand().equals("p"))
-				pause();
 		}
 	}
 }

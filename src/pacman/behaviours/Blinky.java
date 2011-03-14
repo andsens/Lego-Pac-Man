@@ -7,6 +7,6 @@ package pacman.behaviours;
  * @author andsens
  * 
  */
-public class Blinky extends Behaviour {
+public class Blinky extends GhostBehaviour {
 
 }

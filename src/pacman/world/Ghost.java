@@ -8,6 +8,7 @@ import pacman.behaviours.Clyde;
 import pacman.behaviours.Inky;
 import pacman.behaviours.Pinky;
 import pacman.world.maps.Coordinate;
+import pacman.world.maps.Direction;
 
 /**
  * Represents a ghost in the level.
@@ -31,5 +32,28 @@ public class Ghost extends MovingEntity {
 			spriteTile = new Point(30, 18);
 		else if(behaviour instanceof Clyde)
 			spriteTile = new Point(6, 20);
+		else
+			spriteTile = new Point(10, 14);
+	}
+
+	protected Direction getMove(World world) {
+		return behaviour.getMove(world);
+	}
+	
+	public boolean canMove(World world, Direction move) {
+		if(move == Direction.NONE)
+			return true;
+		Point location = getLocation();
+		location.translate(width/2, height/2);
+		move.translate(location);
+		return world.isValidGhostLocation(location);
+	}
+	
+	protected int getSpeed() {
+		return 75;
+	}
+	
+	protected void animate() {
+		
 	}
 }

@@ -9,15 +9,11 @@ import pacman.world.maps.Coordinate;
  * @author andsens
  * 
  */
-public abstract class Entity extends Graphic {
+public abstract class Entity extends Graphic{
 	
 	public Entity(Coordinate coordinate) {
 		super(coordinate);
 	}
 
 	private static final long serialVersionUID = 735990140079476872L;
-	
-	public void tick() {
-
-	}
 }

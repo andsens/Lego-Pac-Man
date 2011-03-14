@@ -7,6 +7,6 @@ package pacman.behaviours;
  * @author andsens
  * 
  */
-public class Pinky extends Behaviour {
+public class Pinky extends GhostBehaviour {
 
 }
