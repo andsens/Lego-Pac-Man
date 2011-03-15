@@ -5,6 +5,7 @@ import java.awt.Point;
 import pacman.behaviours.Behaviour;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
+import pacman.world.tiles.Tile;
 
 /**
  * Represents Pac-man in the level.
@@ -25,8 +26,10 @@ public class Pacman extends MovingEntity {
 		
 	}
 	
+	private Direction heading;
 	protected Direction getMove(World world) {
-		return behaviour.getMove(world);
+		heading = behaviour.getMove(world);
+		return heading;
 	}
 	
 	public boolean canMove(World world, Direction move) {
@@ -35,30 +38,35 @@ public class Pacman extends MovingEntity {
 		Point location = getLocation();
 		location.translate(width/2, height/2);
 		move.translate(location);
-		if(!world.isValidPacmanLocation(location))
-			return false;
+		
+		int modX = location.x % Tile.width;
+		int modY = location.y % Tile.height;
+		boolean upLeft = modX <= Tile.width / 2 && modY <= Tile.height / 2;
+		boolean downLeft = modX <= Tile.width / 2 && modY >= Tile.height / 2;
+		boolean downRight = modX >= Tile.width / 2 && modY >= Tile.height / 2;
+		boolean upRight = modX >= Tile.width / 2 && modY <= Tile.height / 2;
 		if(move.isDiagonal()) {
-			Point straight = (Point) location.clone();
-			move.translate(straight);
-			if(world.isValidPacmanLocation(straight))
-				return true;
-			Point ccw = (Point) location.clone();
-			move.nudge().translate(ccw);
-			Point cc = (Point) location.clone();
-			move.nudge(true).translate(cc);
-			return world.isValidPacmanLocation(ccw) || world.isValidPacmanLocation(cc);
+			if(!world.isValidPacmanLocation(location))
+				return false;
+			if(move == Direction.DOWNRIGHT) // Temporary hack
+				return false;
+			if((move == Direction.UPLEFT || move == Direction.DOWNRIGHT)
+			&& !(downLeft || upRight))
+				return false;
+			if((move == Direction.UPRIGHT || move == Direction.DOWNLEFT)
+			&& !(upLeft || downRight))
+					return false;
+			return true;
 		} else {
-			Point straight = (Point) location.clone();
-			move.translate(straight);
-			if(world.isValidPacmanLocation(straight))
-				return true;
-			Point ccw = (Point) location.clone();
-			move.turn().translate(ccw);
-			move.turn().translate(ccw);
-			Point cc = (Point) location.clone();
-			move.turn(true).translate(cc);
-			move.turn(true).translate(cc);
-			return world.isValidPacmanLocation(ccw) || world.isValidPacmanLocation(cc);
+			if(!world.isValidPacmanLocation(location))
+				return false;
+			if((move == Direction.UP || move == Direction.DOWN)
+			&& modX != Tile.width / 2)
+				return false;
+			if((move == Direction.LEFT || move == Direction.RIGHT)
+			&& modY != Tile.height / 2)
+				return false;
+			return true;
 		}
 	}
 	
@@ -66,7 +74,18 @@ public class Pacman extends MovingEntity {
 		return 80;
 	}
 	
+	protected void act(World world) {
+		Point location = getLocation();
+		location.translate(width/2, height/2);
+		if(world.isDotPresent(location)) {
+			world.eatDot(location);
+		}
+	}
+	
 	protected void animate() {
+	}
+
+	public void energize() {
 		
 	}
 }

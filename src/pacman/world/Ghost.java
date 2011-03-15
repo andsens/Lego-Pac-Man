@@ -54,6 +54,10 @@ public class Ghost extends MovingEntity {
 		return 75;
 	}
 	
+	protected void act(World world) {
+		
+	}
+	
 	protected void animate() {
 		
 	}

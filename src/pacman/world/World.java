@@ -87,6 +87,22 @@ public class World implements ActionListener {
 		return wallMap.isValidGhostLocation(location);
 	}
 
+	public boolean isDotPresent(Point location) {
+		return dotMap.isDotPresent(location);
+	}
+
+	public void eatDot(Point location) {
+		Dot dot = dotMap.eat(location);
+		if(dot != null) {
+			if(Energizer.class.isInstance(dot))
+				energize();
+		}
+	}
+	
+	private void energize() {
+		movingEntityMap.getPacman().energize();
+	}
+
 	public void tick() {
 		if(++tickCount > 100)
 			tickCount = 1;

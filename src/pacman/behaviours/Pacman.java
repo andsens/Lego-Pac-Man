@@ -18,32 +18,39 @@ public class Pacman extends Behaviour implements KeyListener {
 	
 	long resetNext = -1;
 	Direction heading = Direction.NONE;
+	Direction nextDirection = Direction.NONE;
 	public Direction getMove(World world) {
-		Direction go = null;
-		if(resetNext > 500)
-			nextDirection = null;
-		if(nextDirection != null
-		&& canMove(world, nextDirection)) {
-			heading = nextDirection;
-			nextDirection = null;
+		Direction go = Direction.NONE;
+		if(nextDirection == Direction.NONE) {
+			go = heading;
+			if(!canMove(world, go))
+				go = heading.nudge();
+			if(!canMove(world, go))
+				go = heading.nudge(true);
 		} else {
-			Direction diagonal = heading.turn(nextDirection);
-			if(diagonal != Direction.NONE
-			&& canMove(world, diagonal)) {
-				resetNext = -1;
-				go = diagonal;
+			if(canMove(world, nextDirection)) {
+				heading = nextDirection;
+				go = heading;
+			} else {
+				Direction diagonal = heading.turn(nextDirection);
+				if(diagonal != Direction.NONE
+				&& canMove(world, diagonal)) {
+					resetNext = -1;
+					go = diagonal;
+				} else {
+					go = heading;
+				}
 			}
 		}
-		if(go == null)
-			go = heading;
-		if(!canMove(world, go)) {
+		if(!canMove(world, go))
 			go = Direction.NONE;
-			heading = go;
+		if(resetNext != -1
+		&& System.currentTimeMillis()-resetNext > 100) {
+			nextDirection = Direction.NONE;
+			resetNext = -1;
 		}
 		return go;
 	}
-	
-	Direction nextDirection;
 	public void keyPressed(KeyEvent event) {
 		if(Direction.getKeyTranslation(event) != null) {
 			resetNext = -1;

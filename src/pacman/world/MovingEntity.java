@@ -16,9 +16,6 @@ import pacman.world.maps.Direction;
  */
 public abstract class MovingEntity extends Entity implements Changeable  {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -5115554255945990447L;
 
 	public static int width = 22;
@@ -32,7 +29,7 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 		behaviour.setEntity(this);
 		setSize(width, height);
 	}
-
+	
 	public final void tick(World world) {
 		boolean shouldMove = true;
 		int speed = getSpeed();
@@ -52,6 +49,7 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 			move.translate(location);
 			setLocation(location);
 		}
+		act(world);
 		animate();
 	}
 	
@@ -75,6 +73,8 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 		super.reset();
 		behaviour.reset();
 	}
+	
+	protected abstract void act(World world);
 	
 	public abstract boolean canMove(World world, Direction direction);
 	
