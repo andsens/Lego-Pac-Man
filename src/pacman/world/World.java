@@ -13,11 +13,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import pacman.behaviours.BehaviourFactory;
+import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.graphics.Graphic;
 import pacman.world.graphics.Sprite;
 import pacman.world.maps.DotMap;
 import pacman.world.maps.MovingEntityMap;
+import pacman.world.maps.OverlayMap;
 import pacman.world.maps.TypeMap;
 import pacman.world.maps.WallMap;
 import pacman.world.tiles.Tile;
@@ -34,6 +35,8 @@ public class World implements ActionListener {
 
 	private static final long serialVersionUID = -7706020584659519598L;
 	
+	private static final int tickSpeed = 20;
+	
 	private Timer timer;
 	private int tickCount = 1;
 	
@@ -45,12 +48,13 @@ public class World implements ActionListener {
 	private WallMap wallMap;
 	private DotMap dotMap;
 	private MovingEntityMap movingEntityMap;
+	private OverlayMap overlayMap;
 
 	public World(JFrame window, BehaviourFactory behaviours) throws IOException {
 		this.window = window;
 		this.behaviours = behaviours;
 		
-		timer = new Timer(20, this);
+		timer = new Timer(tickSpeed, this);
 		timer.addActionListener(this);
 		
 		map = new TypeMap(new File("maps/classic.txt"));
@@ -76,6 +80,9 @@ public class World implements ActionListener {
 		movingEntityMap = new MovingEntityMap(map, behaviours);
 		layers.add(movingEntityMap, new Integer(4));
 		
+		overlayMap = new OverlayMap(map);
+		layers.add(overlayMap, new Integer(5));
+		
 		layers.paintComponents(layers.getGraphics());
 	}
 	
@@ -86,23 +93,29 @@ public class World implements ActionListener {
 	public boolean isValidGhostLocation(Point location) {
 		return wallMap.isValidGhostLocation(location);
 	}
-
-	public boolean isDotPresent(Point location) {
-		return dotMap.isDotPresent(location);
-	}
-
-	public void eatDot(Point location) {
-		Dot dot = dotMap.eat(location);
-		if(dot != null) {
-			if(Energizer.class.isInstance(dot))
-				energize();
-		}
+	
+	public boolean isValidGhostTile(Point tileLocation) {
+		return wallMap.isValidGhostTile(tileLocation);
 	}
 	
-	private void energize() {
-		movingEntityMap.getPacman().energize();
+	public Point getPacmanLocation() {
+		Point pacmanLocation = movingEntityMap.getPacman().getLocation();
+		pacmanLocation.translate(MovingEntity.width/2, MovingEntity.height/2);
+		return pacmanLocation;
 	}
-
+	
+	public Dot eatDot(Point location) {
+		return dotMap.eat(location);
+	}
+	
+	public void markTile(Point tileLocation) {
+		overlayMap.markTile(tileLocation);
+	}
+	
+	public void clearMarkings() {
+		overlayMap.reset();
+	}
+	
 	public void tick() {
 		if(++tickCount > 100)
 			tickCount = 1;
@@ -135,6 +148,7 @@ public class World implements ActionListener {
 	public void reset() {
 		dotMap.reset();
 		movingEntityMap.reset();
+		overlayMap.reset();
 		tickCount = 1;
 	}
 }

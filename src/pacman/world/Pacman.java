@@ -26,17 +26,14 @@ public class Pacman extends MovingEntity {
 		
 	}
 	
-	private Direction heading;
 	protected Direction getMove(World world) {
-		heading = behaviour.getMove(world);
-		return heading;
+		return behaviour.getMove(world);
 	}
 	
-	public boolean canMove(World world, Direction move) {
+	public boolean canMove(World world, Direction move, Point location) {
 		if(move == Direction.NONE)
 			return true;
-		Point location = getLocation();
-		location.translate(width/2, height/2);
+		location = (Point) location.clone();
 		move.translate(location);
 		
 		int modX = location.x % Tile.width;
@@ -48,8 +45,11 @@ public class Pacman extends MovingEntity {
 		if(move.isDiagonal()) {
 			if(!world.isValidPacmanLocation(location))
 				return false;
-			if(move == Direction.DOWNRIGHT) // Temporary hack
+			if(move == Direction.DOWNRIGHT
+			&& ((modX == 0 && modY-1 == Tile.height / 2)
+				|| (modY == 0 && modX-1 == Tile.width / 2))) {
 				return false;
+			}
 			if((move == Direction.UPLEFT || move == Direction.DOWNRIGHT)
 			&& !(downLeft || upRight))
 				return false;
@@ -77,9 +77,7 @@ public class Pacman extends MovingEntity {
 	protected void act(World world) {
 		Point location = getLocation();
 		location.translate(width/2, height/2);
-		if(world.isDotPresent(location)) {
-			world.eatDot(location);
-		}
+		Dot dot = world.eatDot(location);
 	}
 	
 	protected void animate() {

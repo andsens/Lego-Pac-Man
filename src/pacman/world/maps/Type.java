@@ -1,6 +1,6 @@
 package pacman.world.maps;
 
-import pacman.behaviours.BehaviourFactory;
+import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.Dot;
 import pacman.world.Energizer;
 import pacman.world.Ghost;

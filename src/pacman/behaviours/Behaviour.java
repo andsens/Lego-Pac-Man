@@ -1,5 +1,7 @@
 package pacman.behaviours;
 
+import java.awt.Point;
+
 import pacman.world.MovingEntity;
 import pacman.world.World;
 import pacman.world.maps.Direction;
@@ -20,6 +22,10 @@ public abstract class Behaviour {
 	
 	protected boolean canMove(World world, Direction direction) {
 		return entity.canMove(world, direction);
+	}
+	
+	protected boolean canMove(World world, Direction direction, Point location) {
+		return entity.canMove(world, direction, location);
 	}
 	
 	public abstract Direction getMove(World world);

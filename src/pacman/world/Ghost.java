@@ -41,11 +41,10 @@ public class Ghost extends MovingEntity {
 		return behaviour.getMove(world);
 	}
 	
-	public boolean canMove(World world, Direction move) {
+	public boolean canMove(World world, Direction move, Point location) {
 		if(move == Direction.NONE)
 			return true;
-		Point location = getLocation();
-		location.translate(width/2, height/2);
+		location = (Point) location.clone();
 		move.translate(location);
 		return world.isValidGhostLocation(location);
 	}

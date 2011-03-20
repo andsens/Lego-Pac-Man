@@ -1,8 +1,9 @@
 package pacman.world.maps;
 
 import java.awt.Component;
+import java.awt.Point;
 
-import pacman.behaviours.BehaviourFactory;
+import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.Changeable;
 import pacman.world.MovingEntity;
 import pacman.world.Pacman;

@@ -75,8 +75,16 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	}
 	
 	protected abstract void act(World world);
+
+	public boolean canMove(World world, Direction direction) {
+		if(direction == Direction.NONE)
+			return true;
+		Point location = getLocation();
+		location.translate(width/2, height/2);
+		return canMove(world, direction, location);
+	}
 	
-	public abstract boolean canMove(World world, Direction direction);
+	public abstract boolean canMove(World world, Direction direction, Point location);
 	
 	protected abstract Direction getMove(World world);
 	

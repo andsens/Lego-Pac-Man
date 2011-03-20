@@ -8,9 +8,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
 
 import pacman.MenuItem.Option;
-import pacman.behaviours.StandardKeyboardBehaviourFactory;
+import pacman.behaviours.factories.HomingGhostsBehaviourFactory;
+import pacman.behaviours.factories.RandomBehaviourFactory;
 import pacman.world.World;
 
 public class Game extends JFrame implements KeyListener {
@@ -29,14 +31,14 @@ public class Game extends JFrame implements KeyListener {
 		setResizable(false);
 
 		state = State.STOPPED;
-		world = new World(this, new StandardKeyboardBehaviourFactory());
+		world = new World(this, new HomingGhostsBehaviourFactory());
 
-		Container layers = getLayeredPane();
+		JLayeredPane layers = getLayeredPane();
 		
 		controlScreen = new ControlScreen(this);
 		controlScreen.setLocation(100, 100);
 		addKeyListener(controlScreen);
-		layers.add(controlScreen, new Integer(5));
+		layers.add(controlScreen, new Integer(layers.highestLayer()+1));
 
 		addKeyListener(this);
 		
@@ -76,7 +78,6 @@ public class Game extends JFrame implements KeyListener {
 	public void pause() {
 		state = State.PAUSED;
 		world.pause();
-		controlScreen.showMenu();
 	}
 	
 	public State getGameState() {
@@ -89,11 +90,18 @@ public class Game extends JFrame implements KeyListener {
 	
 	public void keyPressed(KeyEvent event) {
 		if(event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			if(state == State.RUNNING) {
+				pause();
+				controlScreen.showMenu();
+			} else {
+				unpause();
+			}
+		}
+		if(event.getKeyCode() == KeyEvent.VK_SPACE)
 			if(state == State.RUNNING)
 				pause();
 			else
 				unpause();
-		}
 	}
 
 	public void keyReleased(KeyEvent event) {

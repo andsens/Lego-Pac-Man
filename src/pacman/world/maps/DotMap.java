@@ -38,14 +38,7 @@ public class DotMap extends Map<Dot> implements Changeable {
 		for(Component entity : getComponents())
 			entity.setVisible(true);
 	}
-
-	public boolean isDotPresent(Point location) {
-		Object object = getComponentAt(location);
-		if(!Dot.class.isInstance(object))
-			return false;
-		return ((Dot) object).isVisible();
-	}
-
+	
 	public Dot eat(Point location) {
 		Object object = getComponentAt(location);
 		if(!Dot.class.isInstance(object))

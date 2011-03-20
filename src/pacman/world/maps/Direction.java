@@ -19,7 +19,15 @@ public enum Direction {
 	}
 	
 	public void translate(Point location) {
-		location.translate(x, y);
+		translate(location, 1, 1);
+	}
+	
+	public void translate(Point location, int factor) {
+		translate(location, factor, factor);
+	}
+	
+	public void translate(Point location, int xFactor, int yFactor) {
+		location.translate(x*xFactor, y*yFactor);
 	}
 	
 	public void apply(Point location) {
