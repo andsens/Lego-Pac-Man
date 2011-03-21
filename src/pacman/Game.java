@@ -1,6 +1,5 @@
 package pacman;
 
-import java.awt.Container;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -11,8 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 import pacman.MenuItem.Option;
-import pacman.behaviours.factories.HomingGhostsBehaviourFactory;
-import pacman.behaviours.factories.RandomBehaviourFactory;
+import pacman.behaviours.factories.StandardPacmanBehaviours;
 import pacman.world.World;
 
 public class Game extends JFrame implements KeyListener {
@@ -31,7 +29,7 @@ public class Game extends JFrame implements KeyListener {
 		setResizable(false);
 
 		state = State.STOPPED;
-		world = new World(this, new HomingGhostsBehaviourFactory());
+		world = new World(this, new StandardPacmanBehaviours());
 
 		JLayeredPane layers = getLayeredPane();
 		

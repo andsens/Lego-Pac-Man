@@ -1,28 +1,29 @@
 package pacman.behaviours.factories;
 
-import pacman.behaviours.Behaviour;
 import pacman.behaviours.Pacman;
+import pacman.behaviours.PacmanBehaviour;
 import pacman.behaviours.RandomBehaviour;
+import pacman.behaviours.ghosts.GhostBehaviour;
 
 public class RandomBehaviourFactory extends BehaviourFactory {
 
-	protected Behaviour getPacman() {
+	protected PacmanBehaviour getPacman() {
 		return new Pacman();
 	}
 
-	protected Behaviour getBlinky() {
+	protected GhostBehaviour getBlinky() {
 		return new RandomBehaviour();
 	}
 
-	protected Behaviour getPinky() {
+	protected GhostBehaviour getPinky() {
 		return new RandomBehaviour();
 	}
 
-	protected Behaviour getInky() {
+	protected GhostBehaviour getInky() {
 		return new RandomBehaviour();
 	}
 
-	protected Behaviour getClyde() {
+	protected GhostBehaviour getClyde() {
 		return new RandomBehaviour();
 	}
 

@@ -1,10 +1,13 @@
 package pacman.behaviours;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import pacman.world.MovingEntity;
 import pacman.world.World;
 import pacman.world.maps.Direction;
+import pacman.world.tiles.Tile;
 
 /**
  * Pac-man is the protagonist of this game and is controlled by the player.
@@ -14,52 +17,61 @@ import pacman.world.maps.Direction;
  * @author andsens
  * 
  */
-public class Pacman extends Behaviour implements KeyListener {
+public class Pacman extends PacmanBehaviour implements KeyListener {
+	
+	int keyPressTimeout = 200;
 	
 	long resetNext = -1;
-	Direction heading = Direction.NONE;
-	Direction nextDirection = Direction.NONE;
-	public Direction getMove(World world) {
-		Direction go = Direction.NONE;
-		if(nextDirection == Direction.NONE) {
-			go = heading;
-			if(!canMove(world, go))
-				go = heading.nudge();
-			if(!canMove(world, go))
-				go = heading.nudge(true);
+	Direction nextHeading = Direction.NONE;
+	public void think(World world) {
+		Point currentTile = entity.getCurrentTile();
+		
+		if(nextHeading != Direction.NONE
+		&& valid(world, nextHeading.getNext(currentTile))) {
+			heading = nextHeading;
+		} else if(valid(world, heading.getNext(currentTile))) {
+			
 		} else {
-			if(canMove(world, nextDirection)) {
-				heading = nextDirection;
-				go = heading;
-			} else {
-				Direction diagonal = heading.turn(nextDirection);
-				if(diagonal != Direction.NONE
-				&& canMove(world, diagonal)) {
-					resetNext = -1;
-					go = diagonal;
-				} else {
-					go = heading;
-				}
+			Point location = entity.getLocation();
+			location.translate(MovingEntity.width/2, MovingEntity.height/2);
+			int modX = location.x % Tile.width;
+			int modY = location.y % Tile.height;
+			switch(heading) {
+			case UP:
+				if(modY <= Tile.height / 2)
+					heading = Direction.NONE;
+				break;
+			case LEFT:
+				if(modX <= Tile.width / 2)
+					heading = Direction.NONE;
+				break;
+			case DOWN:
+				if(modY >= Tile.height / 2)
+					heading = Direction.NONE;
+				break;
+			case RIGHT:
+				if(modX >= Tile.width / 2)
+					heading = Direction.NONE;
+				break;
 			}
 		}
-		if(!canMove(world, go))
-			go = Direction.NONE;
-		if(resetNext != -1
-		&& System.currentTimeMillis()-resetNext > 100) {
-			nextDirection = Direction.NONE;
-			resetNext = -1;
-		}
-		return go;
+		if(System.currentTimeMillis()-resetNext > keyPressTimeout)
+			nextHeading = Direction.NONE;
 	}
+	
+	protected boolean valid(World world, Point location) {
+		return world.isValidPacmanTile(location);
+	}
+	
 	public void keyPressed(KeyEvent event) {
-		if(Direction.getKeyTranslation(event) != null) {
-			resetNext = -1;
-			nextDirection = Direction.getKeyTranslation(event);
+		if(Direction.getKeyTranslation(event) != Direction.NONE) {
+			resetNext = System.currentTimeMillis();
+			nextHeading = Direction.getKeyTranslation(event);
 		}
 	}
 
 	public void keyReleased(KeyEvent event) {
-		if(Direction.getKeyTranslation(event) != null)
+		if(Direction.getKeyTranslation(event) != Direction.NONE)
 			resetNext = System.currentTimeMillis();
 	}
 
@@ -67,6 +79,6 @@ public class Pacman extends Behaviour implements KeyListener {
 	}
 
 	public void reset() {
-		heading = Direction.NONE;
+		nextHeading = Direction.NONE;
 	}
 }

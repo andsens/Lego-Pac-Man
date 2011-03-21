@@ -86,26 +86,23 @@ public class World implements ActionListener {
 		layers.paintComponents(layers.getGraphics());
 	}
 	
-	public boolean isValidPacmanLocation(Point location) {
-		return wallMap.isValidPacmanLocation(location);
-	}
-	
-	public boolean isValidGhostLocation(Point location) {
-		return wallMap.isValidGhostLocation(location);
+	public boolean isValidPacmanTile(Point tileLocation) {
+		return wallMap.isValidPacmanTile(tileLocation);
 	}
 	
 	public boolean isValidGhostTile(Point tileLocation) {
 		return wallMap.isValidGhostTile(tileLocation);
 	}
 	
-	public Point getPacmanLocation() {
-		Point pacmanLocation = movingEntityMap.getPacman().getLocation();
-		pacmanLocation.translate(MovingEntity.width/2, MovingEntity.height/2);
-		return pacmanLocation;
+	public Pacman getPacman() {
+		return movingEntityMap.getPacman();
 	}
 	
 	public Dot eatDot(Point location) {
 		return dotMap.eat(location);
+	}
+
+	public void energize() {
 	}
 	
 	public void markTile(Point tileLocation) {

@@ -1,7 +1,6 @@
 package pacman.world.maps;
 
 import java.awt.Component;
-import java.awt.Point;
 
 import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.Changeable;

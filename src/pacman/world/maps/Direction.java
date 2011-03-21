@@ -19,20 +19,13 @@ public enum Direction {
 	}
 	
 	public void translate(Point location) {
-		translate(location, 1, 1);
+		location.translate(x, y);
 	}
 	
-	public void translate(Point location, int factor) {
-		translate(location, factor, factor);
-	}
-	
-	public void translate(Point location, int xFactor, int yFactor) {
-		location.translate(x*xFactor, y*yFactor);
-	}
-	
-	public void apply(Point location) {
-		location.x *= x;
-		location.y *= y;
+	public Point getNext(Point location) {
+		location = (Point) location.clone();
+		translate(location);
+		return location;
 	}
 	
 	public Direction turn() {
@@ -49,6 +42,22 @@ public enum Direction {
 			return clockwise?LEFT:RIGHT;
 		case RIGHT:
 			return clockwise?DOWN:UP;
+		case NONE:
+		default:
+			return NONE;
+		}
+	}
+	
+	public Direction reverse() {
+		switch(this) {
+		case UP:
+			return DOWN;
+		case LEFT:
+			return RIGHT;
+		case DOWN:
+			return UP;
+		case RIGHT:
+			return LEFT;
 		case NONE:
 		default:
 			return NONE;

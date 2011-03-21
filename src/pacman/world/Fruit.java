@@ -13,6 +13,8 @@ import pacman.world.maps.Coordinate;
  */
 public class Fruit extends Entity {
 
+	private static final long serialVersionUID = 6910154307184023631L;
+
 	public Fruit(Coordinate coordinate) {
 		super(coordinate);
 	}

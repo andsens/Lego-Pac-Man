@@ -46,56 +46,11 @@ public class WallMap extends Map<Tile> {
 		}
 	}
 	
-	public boolean isValidPacmanLocation(Point location) {
-		return isValidPacmanLocation(location, false);
-	}
-	
-	public boolean isValidPacmanLocation(Point location, boolean plot) {
-		int x = (int) Math.floor(location.x/Tile.width);
-		int y = (int) Math.floor(location.y/Tile.height);
-		if(!navigableTiles[x][y])
-			return false;
-		int modX = location.x % Tile.width;
-		int modY = location.y % Tile.height;
-		if(modX != Tile.width / 2) {
-			int adjacentX = modX > Tile.width / 2 ? x+1 : x-1;
-			if(!navigableTiles[adjacentX][y])
-				return false;
-		}
-		if(modY != Tile.height / 2) {
-			int adjacentY = modY > Tile.height / 2 ? y+1 : y-1;
-			if(!navigableTiles[x][adjacentY])
-				return false;
-		}
-		return true;
+	public boolean isValidPacmanTile(Point tileLocation) {
+		return navigableTiles[tileLocation.x][tileLocation.y];
 	}
 	
 	public boolean isValidGhostTile(Point tileLocation) {
 		return navigableTiles[tileLocation.x][tileLocation.y] || ghostHouseTiles[tileLocation.x][tileLocation.y];
-	}
-	
-	public boolean isValidGhostLocation(Point location) {
-		int x = (int) Math.floor(location.x/Tile.width);
-		int y = (int) Math.floor(location.y/Tile.height);
-		
-		if(!navigableTiles[x][y] && !ghostHouseTiles[x][y])
-			return false;
-		int modX = location.x % Tile.width;
-		int modY = location.y % Tile.height;
-		
-		if(modX != Tile.width / 2
-		&& modY != Tile.height / 2)
-			return false;
-		if(modX != Tile.width / 2) {
-			int adjacentX = modX > Tile.width / 2 ? x+1 : x-1;
-			if(!navigableTiles[adjacentX][y] && !ghostHouseTiles[adjacentX][y])
-				return false;
-		}
-		if(modY != Tile.height / 2) {
-			int adjacentY = modY > Tile.height / 2 ? y+1 : y-1;
-			if(!navigableTiles[x][adjacentY] && !ghostHouseTiles[x][adjacentY])
-				return false;
-		}
-		return true;
 	}
 }

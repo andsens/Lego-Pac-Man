@@ -1,7 +1,5 @@
 package pacman.behaviours;
 
-import java.awt.Point;
-
 import pacman.world.MovingEntity;
 import pacman.world.World;
 import pacman.world.maps.Direction;
@@ -15,20 +13,18 @@ import pacman.world.maps.Direction;
  */
 public abstract class Behaviour {
 	
+	public abstract void reset();
+	
 	protected MovingEntity entity;
 	public void setEntity(MovingEntity entity) {
 		this.entity = entity;
 	}
 	
-	protected boolean canMove(World world, Direction direction) {
-		return entity.canMove(world, direction);
+	public abstract void think(World world);
+	
+	protected Direction heading = Direction.NONE;
+	public Direction getHeading() {
+		return heading;
 	}
 	
-	protected boolean canMove(World world, Direction direction, Point location) {
-		return entity.canMove(world, direction, location);
-	}
-	
-	public abstract Direction getMove(World world);
-
-	public abstract void reset();
 }

@@ -5,6 +5,7 @@ import java.awt.Point;
 import pacman.behaviours.Behaviour;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
+import pacman.world.tiles.Tile;
 
 
 /**
@@ -21,12 +22,8 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	public static int width = 22;
 	public static int height = 22;
 	
-	protected Behaviour behaviour;
-	
-	public MovingEntity(Coordinate coordinate, Behaviour behaviour) {
+	public MovingEntity(Coordinate coordinate) {
 		super(coordinate);
-		this.behaviour = behaviour;
-		behaviour.setEntity(this);
 		setSize(width, height);
 	}
 	
@@ -44,13 +41,11 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 			}
 		}
 		if(shouldMove) {
-			Direction move = getMove(world);
-			Point location = getLocation();
-			move.translate(location);
-			setLocation(location);
+			think(world);
+			move();
+			act(world);
+			animate();
 		}
-		act(world);
-		animate();
 	}
 	
 	protected Point getEdge(Direction side) {
@@ -69,26 +64,28 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 		}
 	}
 	
-	public void reset() {
-		super.reset();
-		behaviour.reset();
+	public Point getCurrentTile() {
+		Point currentTile = getLocation();
+		currentTile.translate(MovingEntity.width/2, MovingEntity.height/2);
+		currentTile.x = (int) Math.floor(currentTile.x/Tile.width);
+		currentTile.y = (int) Math.floor(currentTile.y/Tile.height);
+		return currentTile;
+	}
+	
+	protected abstract Behaviour getBehaviour();
+	
+	protected abstract void think(World world);
+	
+	protected void move() {
+		Direction heading = getBehaviour().getHeading();
+		Point location = getLocation();
+		heading.translate(location);
+		setLocation(location);
 	}
 	
 	protected abstract void act(World world);
-
-	public boolean canMove(World world, Direction direction) {
-		if(direction == Direction.NONE)
-			return true;
-		Point location = getLocation();
-		location.translate(width/2, height/2);
-		return canMove(world, direction, location);
-	}
-	
-	public abstract boolean canMove(World world, Direction direction, Point location);
-	
-	protected abstract Direction getMove(World world);
-	
-	protected abstract int getSpeed();
 	
 	protected abstract void animate();
+	
+	protected abstract int getSpeed();
 }
