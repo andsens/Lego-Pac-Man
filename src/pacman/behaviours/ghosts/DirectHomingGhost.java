@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import pacman.world.World;
 import pacman.world.maps.Direction;
+import pacman.world.maps.Type;
 
 public class DirectHomingGhost extends GhostBehaviour {
 	
@@ -16,7 +17,7 @@ public class DirectHomingGhost extends GhostBehaviour {
 	}
 	
 	public Point getChaseTarget(World world) {
-		return world.getPacman().getCurrentTile();
+		return world.getMovingEntity(Type.PACMAN).getCurrentTile();
 	}
 	
 	private Point scatterTarget = new Point(13, 0);

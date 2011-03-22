@@ -27,8 +27,6 @@ public class StandardPacmanBehaviours extends BehaviourFactory {
 	}
 
 	protected GhostBehaviour getClyde() {
-		return new StationaryBehaviour();
+		return new Clyde();
 	}
-	
-
 }

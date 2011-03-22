@@ -4,6 +4,7 @@ import java.awt.Point;
 
 import pacman.world.World;
 import pacman.world.maps.Direction;
+import pacman.world.maps.Type;
 
 /**
  * Blinky is the red ghost. See a description of Blinky's behaviour <a href="../../../Ghost Behaviour/index.htm#Blinky">here</a>.
@@ -23,7 +24,7 @@ public class Blinky extends GhostBehaviour {
 	}
 	
 	protected Point getChaseTarget(World world) {
-		return world.getPacman().getCurrentTile();
+		return world.getMovingEntity(Type.PACMAN).getCurrentTile();
 	}
 	
 	private Point scatterTarget = new Point(25, 0);

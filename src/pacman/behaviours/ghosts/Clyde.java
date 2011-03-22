@@ -2,8 +2,10 @@ package pacman.behaviours.ghosts;
 
 import java.awt.Point;
 
+import pacman.world.MovingEntity;
 import pacman.world.World;
 import pacman.world.maps.Direction;
+import pacman.world.maps.Type;
 
 /**
  * Clyde is the orange ghost. See a description of Clyde's behaviour <a href="../../../Ghost Behaviour/index.htm#Clyde">here</a>.
@@ -23,7 +25,12 @@ public class Clyde extends GhostBehaviour {
 	}
 	
 	protected Point getChaseTarget(World world) {
-		return world.getPacman().getCurrentTile();
+		Point pacmanTile = world.getMovingEntity(Type.PACMAN).getCurrentTile();
+		double distance = entity.getCurrentTile().distance(pacmanTile);
+		if(distance >= 8)
+			return pacmanTile;
+		else
+			return scatterTarget;
 	}
 	
 	private Point scatterTarget = new Point(0, 34);

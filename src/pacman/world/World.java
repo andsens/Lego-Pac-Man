@@ -19,6 +19,7 @@ import pacman.world.graphics.Sprite;
 import pacman.world.maps.DotMap;
 import pacman.world.maps.MovingEntityMap;
 import pacman.world.maps.OverlayMap;
+import pacman.world.maps.Type;
 import pacman.world.maps.TypeMap;
 import pacman.world.maps.WallMap;
 import pacman.world.tiles.Tile;
@@ -94,8 +95,8 @@ public class World implements ActionListener {
 		return wallMap.isValidGhostTile(tileLocation);
 	}
 	
-	public Pacman getPacman() {
-		return movingEntityMap.getPacman();
+	public MovingEntity getMovingEntity(Type entityType) {
+		return movingEntityMap.get(entityType);
 	}
 	
 	public Dot eatDot(Point location) {
@@ -111,6 +112,11 @@ public class World implements ActionListener {
 	
 	public void clearMarkings() {
 		overlayMap.reset();
+	}
+
+	public void capTileLocation(Point tile) {
+		tile.x = tile.x > 0 ? Math.min(tile.x, map.getWidth()-1) : 0;
+		tile.y = tile.y > 0 ? Math.min(tile.y, map.getHeight()-1) : 0;
 	}
 	
 	public void tick() {

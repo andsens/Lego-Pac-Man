@@ -88,4 +88,8 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	protected abstract void animate();
 	
 	protected abstract int getSpeed();
+	
+	public Direction getHeading() {
+		return getBehaviour().getHeading();
+	}
 }

@@ -12,8 +12,8 @@ import pacman.world.maps.Direction;
 
 public abstract class GhostBehaviour extends Behaviour {
 
-	protected GhostMode currentMode = GhostMode.SCATTER;
-	protected GhostMode nextMode = GhostMode.SCATTER;
+	protected GhostMode currentMode = GhostMode.CHASE;
+	protected GhostMode nextMode = currentMode;
 	public void changeMode(GhostMode newMode) {
 		this.nextMode = newMode;
 	}
@@ -68,7 +68,7 @@ public abstract class GhostBehaviour extends Behaviour {
 		}
 	}
 	
-	protected Point getTarget(World world) {
+	private Point getTarget(World world) {
 		switch(currentMode) {
 		default:
 		case SCATTER:

@@ -107,7 +107,7 @@ public class Pacman extends MovingEntity {
 	}
 	
 	protected void animate() {
-		Direction heading = getBehaviour().getHeading();
+		Direction heading = behaviour.getHeading();
 		if(heading == Direction.NONE)
 			return;
 		switch(heading) {

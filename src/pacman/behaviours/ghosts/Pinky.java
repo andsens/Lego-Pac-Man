@@ -2,8 +2,10 @@ package pacman.behaviours.ghosts;
 
 import java.awt.Point;
 
+import pacman.world.MovingEntity;
 import pacman.world.World;
 import pacman.world.maps.Direction;
+import pacman.world.maps.Type;
 
 /**
  * Pinky is the pink ghost. See a description of Pinky's behaviour <a href="../../../Ghost Behaviour/index.htm#Pinky">here</a>.
@@ -23,7 +25,14 @@ public class Pinky extends GhostBehaviour {
 	}
 	
 	protected Point getChaseTarget(World world) {
-		return world.getPacman().getCurrentTile();
+		MovingEntity pacman = world.getMovingEntity(Type.PACMAN);
+		Direction heading = pacman.getHeading();
+		Point targetTile = pacman.getCurrentTile();
+		heading.translate(targetTile, 4);
+		if(heading == Direction.UP) // Simulate the buffer overflow from the original
+			heading.turn().translate(targetTile, 4);
+		world.capTileLocation(targetTile);
+		return targetTile;
 	}
 	
 	private Point scatterTarget = new Point(2, 0);
