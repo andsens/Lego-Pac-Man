@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import pacman.behaviours.Behaviour;
 import pacman.behaviours.PacmanBehaviour;
-import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.tiles.Tile;
 
@@ -20,19 +19,18 @@ public class Pacman extends MovingEntity {
 	
 	protected PacmanBehaviour behaviour;
 	
-	public Pacman(Coordinate coordinate, PacmanBehaviour behaviour) {
-		super(coordinate);
+	public Pacman(Point location, PacmanBehaviour behaviour) {
+		super(location);
 		this.behaviour = behaviour;
 		this.behaviour.setEntity(this);
-		coordinate.translate(1, -5);
-		setLocation(coordinate);
 		spriteTile = new Point(0, 16);
-		
+	}
+	
+	protected Point getOffset() {
+		return new Point(1, -5);
 	}
 
 	protected void think(World world) {
-		Point location = getLocation();
-		location.translate(width/2, height/2);
 		behaviour.think(world);
 	}
 	
@@ -97,7 +95,7 @@ public class Pacman extends MovingEntity {
 		location.translate(width/2, height/2);
 		Dot dot = world.eatDot(location);
 		if(dot != null) {
-			dotEaten = 6;
+			dotEaten = 12;
 			if(Energizer.class.isInstance(dot))
 				world.energize();
 		} else {
@@ -106,31 +104,31 @@ public class Pacman extends MovingEntity {
 		}
 	}
 	
-	protected void animate() {
+	protected void animate(World world) {
 		Direction heading = behaviour.getHeading();
 		if(heading == Direction.NONE)
 			return;
 		switch(heading) {
 		case UP:
-			if(dotEaten > 0)
+			if(dotEaten >= 6)
 				spriteTile = new Point(6, 22);
 			else
 				spriteTile = new Point(2, 22);
 			break;
 		case DOWN:
-			if(dotEaten > 0)
+			if(dotEaten >= 6)
 				spriteTile = new Point(30, 14);
 			else
 				spriteTile = new Point(26, 14);
 			break;
 		case LEFT:
-			if(dotEaten > 0)
+			if(dotEaten >= 6)
 				spriteTile = new Point(4, 22);
 			else
 				spriteTile = new Point(0, 22);
 			break;
 		case RIGHT:
-			if(dotEaten > 0)
+			if(dotEaten >= 6)
 				spriteTile = new Point(28, 14);
 			else
 				spriteTile = new Point(24, 14);
@@ -138,8 +136,49 @@ public class Pacman extends MovingEntity {
 		}
 	}
 	
-	protected int getSpeed() {
-		return 80;
+	protected int getSpeed(World world) {
+		int level = world.getLevel();
+		GhostMode mode = world.getGhostMode();
+		if(level == 1) {
+			if(mode == GhostMode.FRIGHTENED)
+				if(dotEaten > 0)
+					return 79;
+				else
+					return 90;
+			else
+				if(dotEaten > 0)
+					return 71;
+				else
+					return 80;
+		}
+		if(level <= 4) {
+			if(mode == GhostMode.FRIGHTENED)
+				if(dotEaten > 0)
+					return 83;
+				else
+					return 95;
+			else
+				if(dotEaten > 0)
+					return 79;
+				else
+					return 90;
+		}
+		if(level <= 20) {
+			if(mode == GhostMode.FRIGHTENED)
+				if(dotEaten > 0)
+					return 87;
+				else
+					return 100;
+			else
+				if(dotEaten > 0)
+					return 87;
+				else
+					return 100;
+		}
+		if(dotEaten > 0)
+			return 79;
+		else
+			return 90;
 	}
 	
 	public void energize() {

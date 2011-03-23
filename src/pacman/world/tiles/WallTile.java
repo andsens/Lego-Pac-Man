@@ -2,15 +2,14 @@ package pacman.world.tiles;
 
 import java.awt.Point;
 
-import pacman.world.maps.Coordinate;
 import pacman.world.maps.Type;
 
 public class WallTile extends Tile {
 	
 	private static final long serialVersionUID = 7555949431966646298L;
 	
-	public WallTile(Coordinate coordinate, Type type) {
-		super(coordinate);
+	public WallTile(Point location, Type type) {
+		super(location);
 		switch (type) {
 		case UP:
 			spriteTile = new Point(30, 6);

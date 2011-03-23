@@ -3,7 +3,6 @@ package pacman.world;
 import java.awt.Point;
 
 import pacman.world.graphics.Graphic;
-import pacman.world.maps.Coordinate;
 
 /**
  * An object in the level. This can be a simple dot or Pac-man.
@@ -17,9 +16,9 @@ public abstract class Entity extends Graphic {
 	
 	Point originalLocation;
 	
-	public Entity(Coordinate coordinate) {
-		super(coordinate);
-		originalLocation = coordinate;
+	public Entity(Point location) {
+		super(location);
+		originalLocation = location;
 	}
 	
 	public void reset() {

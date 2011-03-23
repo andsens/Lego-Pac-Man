@@ -21,9 +21,8 @@ public class DotMap extends Map<Dot> implements Changeable {
 		Type[][] typeMap = map.getTypeMap();
 		for(int x = 0; x < typeMap.length; x++) {
 			for(int y = 0; y < typeMap[x].length; y++) {
-				Coordinate coordinate = new Coordinate(x, y);
-				coordinate.scale(Tile.width, Tile.height);
-				Dot dot = typeMap[x][y].createDot(coordinate);
+				Point location = new Point(x*Tile.width, y*Tile.height);
+				Dot dot = typeMap[x][y].createDot(location);
 				if(dot == null)
 					continue;
 				add(dot);

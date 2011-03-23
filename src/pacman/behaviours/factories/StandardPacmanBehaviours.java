@@ -6,7 +6,6 @@ import pacman.behaviours.ghosts.Clyde;
 import pacman.behaviours.ghosts.GhostBehaviour;
 import pacman.behaviours.ghosts.Inky;
 import pacman.behaviours.ghosts.Pinky;
-import pacman.behaviours.ghosts.StationaryBehaviour;
 
 public class StandardPacmanBehaviours extends BehaviourFactory {
 

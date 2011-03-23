@@ -46,8 +46,8 @@ public class Game extends JFrame implements KeyListener {
 	public void menuItemSelected(Option option) {
 		switch(option) {
 		case NEWGAME:
-			stop();
-			start();
+			pause();
+			restart();
 		case CONTINUE:
 			unpause();
 		case OPTIONS:
@@ -57,25 +57,22 @@ public class Game extends JFrame implements KeyListener {
 		}
 	}
 	
-	public void start() {
+	public void restart() {
 		controlScreen.hideMenu();
 		state = State.RUNNING;
-		world.start();
-	}
-	
-	public void stop() {
-		state = State.STOPPED;
-		world.pause();
 		world.reset();
-	}
-	
-	public void unpause() {
-		start();
+		world.restart();
 	}
 	
 	public void pause() {
 		state = State.PAUSED;
 		world.pause();
+	}
+	
+	public void unpause() {
+		controlScreen.hideMenu();
+		state = State.RUNNING;
+		world.unpause();
 	}
 	
 	public State getGameState() {

@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 
 import pacman.world.MovingEntity;
 import pacman.world.World;
+import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.tiles.Tile;
 
@@ -24,7 +25,7 @@ public class Pacman extends PacmanBehaviour implements KeyListener {
 	long resetNext = -1;
 	Direction nextHeading = Direction.NONE;
 	public void think(World world) {
-		Point currentTile = entity.getCurrentTile();
+		Coordinate currentTile = entity.getCurrentTile();
 		
 		if(nextHeading != Direction.NONE
 		&& valid(world, nextHeading.getNext(currentTile))) {
@@ -59,7 +60,7 @@ public class Pacman extends PacmanBehaviour implements KeyListener {
 			nextHeading = Direction.NONE;
 	}
 	
-	protected boolean valid(World world, Point location) {
+	protected boolean valid(World world, Coordinate location) {
 		return world.isValidPacmanTile(location);
 	}
 	

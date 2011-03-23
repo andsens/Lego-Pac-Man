@@ -1,16 +1,31 @@
 package pacman.world.maps;
 
-import java.awt.Point;
-
-public class Coordinate extends Point {
+public class Coordinate {
 	
-	private static final long serialVersionUID = -3312946614975029286L;
+	public int x, y;
 	
-	public Coordinate(int x, int y) {
-		super(x, y);
+	public Coordinate() {
+		x = 0;
+		y = 0;
 	}
 	
-	public void scale(int horizontal, int vertical){
-		setLocation(x*horizontal, y*vertical);
+	public Coordinate(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
+	
+	public void translate(int dx, int dy) {
+		x += dx;
+		y += dy;
+	}
+	
+	public double distance(Coordinate coordinate) {
+		int dx = Math.abs(x-coordinate.x);
+		int dy = Math.abs(y-coordinate.y);
+		return Math.sqrt(dx*dx+dy*dy);
+	}
+	
+	public Coordinate clone() {
+		return new Coordinate(x, y);
 	}
 }

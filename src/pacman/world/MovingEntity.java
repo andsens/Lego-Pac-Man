@@ -22,14 +22,14 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	public static int width = 22;
 	public static int height = 22;
 	
-	public MovingEntity(Coordinate coordinate) {
-		super(coordinate);
+	public MovingEntity(Point location) {
+		super(location);
 		setSize(width, height);
 	}
 	
 	public final void tick(World world) {
 		boolean shouldMove = true;
-		int speed = getSpeed();
+		int speed = getSpeed(world);
 		if(speed == 0) {
 			shouldMove = false;
 		} else if(speed < 100) {
@@ -44,7 +44,7 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 			think(world);
 			move();
 			act(world);
-			animate();
+			animate(world);
 		}
 	}
 	
@@ -64,11 +64,12 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 		}
 	}
 	
-	public Point getCurrentTile() {
-		Point currentTile = getLocation();
-		currentTile.translate(MovingEntity.width/2, MovingEntity.height/2);
-		currentTile.x = (int) Math.floor(currentTile.x/Tile.width);
-		currentTile.y = (int) Math.floor(currentTile.y/Tile.height);
+	public Coordinate getCurrentTile() {
+		Point currentLocation = getLocation();
+		currentLocation.translate(MovingEntity.width/2, MovingEntity.height/2);
+		Coordinate currentTile = new Coordinate();
+		currentTile.x = (int) Math.floor(currentLocation.x/Tile.width);
+		currentTile.y = (int) Math.floor(currentLocation.y/Tile.height);
 		return currentTile;
 	}
 	
@@ -85,9 +86,9 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	
 	protected abstract void act(World world);
 	
-	protected abstract void animate();
+	protected abstract void animate(World world);
 	
-	protected abstract int getSpeed();
+	protected abstract int getSpeed(World world);
 	
 	public Direction getHeading() {
 		return getBehaviour().getHeading();

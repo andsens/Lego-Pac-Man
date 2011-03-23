@@ -1,9 +1,8 @@
 package pacman.behaviours.ghosts;
 
-import java.awt.Point;
-
 import pacman.world.MovingEntity;
 import pacman.world.World;
+import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.maps.Type;
 
@@ -24,16 +23,16 @@ public class Inky extends GhostBehaviour {
 		heading = Direction.LEFT;
 	}
 	
-	protected Point getChaseTarget(World world) {
+	protected Coordinate getChaseTarget(World world) {
 		MovingEntity pacman = world.getMovingEntity(Type.PACMAN);
 		MovingEntity blinky = world.getMovingEntity(Type.BLINKY);
 		
-		Point targetTile = pacman.getCurrentTile();
+		Coordinate targetTile = pacman.getCurrentTile();
 		heading.translate(targetTile, 2);
 		if(heading == Direction.UP) // Simulate the buffer overflow from the original
 			heading.turn().translate(targetTile, 2);
 		
-		Point blinkyTile = blinky.getCurrentTile();
+		Coordinate blinkyTile = blinky.getCurrentTile();
 		int vectorX = targetTile.x-blinkyTile.x;
 		int vectorY = targetTile.y-blinkyTile.y;
 		
@@ -42,8 +41,8 @@ public class Inky extends GhostBehaviour {
 		return targetTile;
 	}
 	
-	private Point scatterTarget = new Point(27, 34);
-	protected Point getScatterTarget(World world) {
+	private Coordinate scatterTarget = new Coordinate(27, 34);
+	protected Coordinate getScatterTarget(World world) {
 		return scatterTarget;
 	}
 }

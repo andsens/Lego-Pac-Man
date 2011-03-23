@@ -18,16 +18,20 @@ public enum Direction {
 		
 	}
 	
-	public void translate(Point location, int factor) {
-		location.translate(x*factor, y*factor);
-	}
-	
 	public void translate(Point location) {
 		location.translate(x, y);
 	}
 	
-	public Point getNext(Point location) {
-		location = (Point) location.clone();
+	public void translate(Coordinate location, int factor) {
+		location.translate(x*factor, y*factor);
+	}
+	
+	public void translate(Coordinate location) {
+		location.translate(x, y);
+	}
+	
+	public Coordinate getNext(Coordinate location) {
+		location = location.clone();
 		translate(location);
 		return location;
 	}

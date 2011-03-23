@@ -1,8 +1,7 @@
 package pacman.behaviours.ghosts;
 
-import java.awt.Point;
-
 import pacman.world.World;
+import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.maps.Type;
 
@@ -23,12 +22,12 @@ public class Blinky extends GhostBehaviour {
 		heading = Direction.LEFT;
 	}
 	
-	protected Point getChaseTarget(World world) {
+	protected Coordinate getChaseTarget(World world) {
 		return world.getMovingEntity(Type.PACMAN).getCurrentTile();
 	}
 	
-	private Point scatterTarget = new Point(25, 0);
-	protected Point getScatterTarget(World world) {
+	private Coordinate scatterTarget = new Coordinate(25, 0);
+	protected Coordinate getScatterTarget(World world) {
 		return scatterTarget;
 	}
 }

@@ -1,5 +1,7 @@
 package pacman.world.maps;
 
+import java.awt.Point;
+
 import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.Dot;
 import pacman.world.Energizer;
@@ -9,6 +11,7 @@ import pacman.world.Pacman;
 import pacman.world.tiles.EmptyTile;
 import pacman.world.tiles.GhostHouseTile;
 import pacman.world.tiles.NavigableTile;
+import pacman.world.tiles.RedZoneTile;
 import pacman.world.tiles.Tile;
 import pacman.world.tiles.WallTile;
 
@@ -22,7 +25,7 @@ public enum Type {
 	SPLT_RGT_UP('i'), SPLT_RGT_DWN('c'),
 	UP('u'), LEFT('l'), DOWN('d'), RIGHT('r'),
 	UPLFT('U'), DWNLFT('L'), DWNRGT('R'), UPRGT('x'),
-	OOB('o'), EMPTY('e'), GHOSTHOUSE('g'), BARRIER('G'),
+	OOB('o'), EMPTY('e'), GHOSTHOUSE('g'), BARRIER('G'), REDZONE('Z'),
 	DOT('D'), ENERGIZER('E'),
 	PACMAN('P'), BLINKY('B'), PINKY('p'), INKY('I'), CLYDE('C');
 	
@@ -40,23 +43,25 @@ public enum Type {
 		return null;
 	}
 	
-	public Tile createTile(Coordinate coordinate) {
+	public Tile createTile(Point location) {
 		switch(this) {
 		case OOB:
-			return new EmptyTile(coordinate);
+			return new EmptyTile(location);
 		case EMPTY:
 		case DOT:
 		case ENERGIZER:
 		case PACMAN:
 		case BLINKY:
-			return new NavigableTile(coordinate);
+			return new NavigableTile(location);
+		case REDZONE:
+			return new RedZoneTile(location);
 		case BARRIER:
-			return new GhostHouseTile(coordinate, true);
+			return new GhostHouseTile(location, true);
 		case GHOSTHOUSE:
 		case INKY:
 		case PINKY:
 		case CLYDE:
-			return new GhostHouseTile(coordinate, false);
+			return new GhostHouseTile(location, false);
 		case UP:
 		case LEFT:
 		case DOWN:
@@ -85,33 +90,33 @@ public enum Type {
 		case SPLT_LFT_DWN:
 		case SPLT_RGT_UP:
 		case SPLT_RGT_DWN:
-			return new WallTile(coordinate, this);
+			return new WallTile(location, this);
 		}
 		return null;
 	}
 	
-	public Dot createDot(Coordinate coordinate) {
+	public Dot createDot(Point location) {
 		switch(this) {
 		case DOT:
-			return new Dot(coordinate);
+			return new Dot(location);
 		case ENERGIZER:
-			return new Energizer(coordinate);
+			return new Energizer(location);
 		}
 		return null;
 	}
 	
-	public MovingEntity createEntity(Coordinate coordinate, BehaviourFactory behaviours) {
+	public MovingEntity createEntity(Point location, BehaviourFactory behaviours) {
 		switch(this) {
 		case PACMAN:
-			return new Pacman(coordinate, behaviours.getPacmanBehaviour());
+			return new Pacman(location, behaviours.getPacmanBehaviour());
 		case BLINKY:
-			return new Ghost(coordinate, behaviours.getBlinkyBehaviour(), this);
+			return new Ghost(location, behaviours.getBlinkyBehaviour(), this);
 		case PINKY:
-			return new Ghost(coordinate, behaviours.getPinkyBehaviour(), this);
+			return new Ghost(location, behaviours.getPinkyBehaviour(), this);
 		case INKY:
-			return new Ghost(coordinate, behaviours.getInkyBehaviour(), this);
+			return new Ghost(location, behaviours.getInkyBehaviour(), this);
 		case CLYDE:
-			return new Ghost(coordinate, behaviours.getClydeBehaviour(), this);
+			return new Ghost(location, behaviours.getClydeBehaviour(), this);
 		}
 		return null;
 	}

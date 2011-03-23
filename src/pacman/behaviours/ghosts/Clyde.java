@@ -1,9 +1,7 @@
 package pacman.behaviours.ghosts;
 
-import java.awt.Point;
-
-import pacman.world.MovingEntity;
 import pacman.world.World;
+import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.maps.Type;
 
@@ -24,8 +22,8 @@ public class Clyde extends GhostBehaviour {
 		heading = Direction.LEFT;
 	}
 	
-	protected Point getChaseTarget(World world) {
-		Point pacmanTile = world.getMovingEntity(Type.PACMAN).getCurrentTile();
+	protected Coordinate getChaseTarget(World world) {
+		Coordinate pacmanTile = world.getMovingEntity(Type.PACMAN).getCurrentTile();
 		double distance = entity.getCurrentTile().distance(pacmanTile);
 		if(distance >= 8)
 			return pacmanTile;
@@ -33,8 +31,8 @@ public class Clyde extends GhostBehaviour {
 			return scatterTarget;
 	}
 	
-	private Point scatterTarget = new Point(0, 34);
-	protected Point getScatterTarget(World world) {
+	private Coordinate scatterTarget = new Coordinate(0, 34);
+	protected Coordinate getScatterTarget(World world) {
 		return scatterTarget;
 	}
 }

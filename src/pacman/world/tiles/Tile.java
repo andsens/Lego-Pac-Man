@@ -1,7 +1,8 @@
 package pacman.world.tiles;
 
+import java.awt.Point;
+
 import pacman.world.graphics.Graphic;
-import pacman.world.maps.Coordinate;
 
 
 /**
@@ -19,8 +20,8 @@ public abstract class Tile extends Graphic {
 	public static int width = 12;
 	public static int height = 12;
 	
-	public Tile(Coordinate coordinate) {
-		super(coordinate);
+	public Tile(Point location) {
+		super(location);
 		setSize(width, height);
 	}
 }

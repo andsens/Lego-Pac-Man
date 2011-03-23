@@ -16,6 +16,7 @@ import javax.swing.Timer;
 import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.graphics.Graphic;
 import pacman.world.graphics.Sprite;
+import pacman.world.maps.Coordinate;
 import pacman.world.maps.DotMap;
 import pacman.world.maps.MovingEntityMap;
 import pacman.world.maps.OverlayMap;
@@ -87,12 +88,103 @@ public class World implements ActionListener {
 		layers.paintComponents(layers.getGraphics());
 	}
 	
-	public boolean isValidPacmanTile(Point tileLocation) {
-		return wallMap.isValidPacmanTile(tileLocation);
+	int level = 1;
+	public int getLevel() {
+		return level;
 	}
 	
-	public boolean isValidGhostTile(Point tileLocation) {
-		return wallMap.isValidGhostTile(tileLocation);
+	long lastEnergizer = 0;
+	public long getEnergizerLeft() {
+		int energizerSeconds = 0;
+		switch(level) {
+		case  1: energizerSeconds = 6; break;
+		case  2: energizerSeconds = 5; break;
+		case  3: energizerSeconds = 4; break;
+		case  4: energizerSeconds = 3; break;
+		case  5: energizerSeconds = 2; break;
+		case  6: energizerSeconds = 5; break;
+		case  7: energizerSeconds = 2; break;
+		case  8: energizerSeconds = 2; break;
+		case  9: energizerSeconds = 1; break;
+		case 10: energizerSeconds = 5; break;
+		case 11: energizerSeconds = 2; break;
+		case 12: energizerSeconds = 1; break;
+		case 13: energizerSeconds = 1; break;
+		case 14: energizerSeconds = 3; break;
+		case 15: energizerSeconds = 1; break;
+		case 16: energizerSeconds = 1; break;
+		case 17: energizerSeconds = 1; break;
+		case 18: energizerSeconds = 1; break;
+		}
+		return Math.max(0, energizerSeconds*1000 - System.currentTimeMillis() + lastEnergizer);
+	}
+	
+	public GhostMode getGhostMode() {
+		if(getEnergizerLeft() > 0)
+			return GhostMode.FRIGHTENED;
+		
+		int gameSeconds = (int) Math.ceil((System.currentTimeMillis()-gameStart)/1000);
+		if(level == 1) {
+			if(gameSeconds <= 7)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 27)
+				return GhostMode.CHASE;
+			if(gameSeconds <= 34)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 54)
+				return GhostMode.CHASE;
+			if(gameSeconds <= 59)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 79)
+				return GhostMode.CHASE;
+			if(gameSeconds <= 84)
+				return GhostMode.SCATTER;
+			return GhostMode.CHASE;
+		}
+		if(level <= 4) {
+			if(gameSeconds <= 7)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 27)
+				return GhostMode.CHASE;
+			if(gameSeconds <= 34)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 54)
+				return GhostMode.CHASE;
+			if(gameSeconds <= 59)
+				return GhostMode.SCATTER;
+			if(gameSeconds <= 1092)
+				return GhostMode.CHASE;
+			if(System.currentTimeMillis()-gameStart <= 1092+1/60)
+				return GhostMode.SCATTER;
+			return GhostMode.CHASE;
+		}
+		if(gameSeconds <= 5)
+			return GhostMode.SCATTER;
+		if(gameSeconds <= 25)
+			return GhostMode.CHASE;
+		if(gameSeconds <= 30)
+			return GhostMode.SCATTER;
+		if(gameSeconds <= 50)
+			return GhostMode.CHASE;
+		if(gameSeconds <= 55)
+			return GhostMode.SCATTER;
+		if(gameSeconds <= 1092)
+			return GhostMode.CHASE;
+		if(System.currentTimeMillis()-gameStart <= 1092+1/60)
+			return GhostMode.SCATTER;
+		return GhostMode.CHASE;
+	}
+	
+	public boolean isValidPacmanTile(Coordinate coordinate) {
+		return wallMap.isValidPacmanTile(coordinate);
+	}
+	
+	public boolean isValidGhostTile(Coordinate coordinate) {
+		return wallMap.isValidGhostTile(coordinate);
+	}
+	
+	public boolean isRedZoneTile(Coordinate coordinate) {
+		return wallMap.isRedZoneTile(coordinate);
 	}
 	
 	public MovingEntity getMovingEntity(Type entityType) {
@@ -102,19 +194,21 @@ public class World implements ActionListener {
 	public Dot eatDot(Point location) {
 		return dotMap.eat(location);
 	}
-
+	
 	public void energize() {
+		lastEnergizer = System.currentTimeMillis();
+		movingEntityMap.frightenGhosts();
 	}
 	
-	public void markTile(Point tileLocation) {
-		overlayMap.markTile(tileLocation);
+	public void markTile(Coordinate coordinate) {
+		overlayMap.markTile(coordinate);
 	}
 	
 	public void clearMarkings() {
 		overlayMap.reset();
 	}
 
-	public void capTileLocation(Point tile) {
+	public void capTileLocation(Coordinate tile) {
 		tile.x = tile.x > 0 ? Math.min(tile.x, map.getWidth()-1) : 0;
 		tile.y = tile.y > 0 ? Math.min(tile.y, map.getHeight()-1) : 0;
 	}
@@ -136,19 +230,29 @@ public class World implements ActionListener {
 		}
 	}
 	
-	public void start() {
+	long gameStart;
+	public void restart() {
+		reset();
+		unpause();
+	}
+	
+	long gamePause;
+	public void unpause() {
+		gameStart += gamePause - gameStart;
 		timer.start();
 		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
 			window.addKeyListener((KeyListener) behaviours.getPacmanBehaviour());
 	}
 	
 	public void pause() {
+		gamePause = System.currentTimeMillis();
 		timer.stop();
 		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
 			window.removeKeyListener((KeyListener) behaviours.getPacmanBehaviour());
 	}
 	
 	public void reset() {
+		gameStart = System.currentTimeMillis();
 		dotMap.reset();
 		movingEntityMap.reset();
 		overlayMap.reset();

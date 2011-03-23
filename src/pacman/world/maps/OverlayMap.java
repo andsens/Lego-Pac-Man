@@ -28,9 +28,8 @@ public class OverlayMap extends Map<Tile> {
 		markers = new Marker[map.getWidth()][map.getHeight()];
 		for(int x = 0; x < typeMap.length; x++) {
 			for(int y = 0; y < typeMap[x].length; y++) {
-				Coordinate coordinate = new Coordinate(x, y);
-				coordinate.scale(Tile.width, Tile.height);
-				Marker marker = new Marker(coordinate);
+				Point location = new Point(x*Tile.width, y*Tile.height);
+				Marker marker = new Marker(location);
 				markers[x][y] = marker;
 				marker.setVisible(false);
 				add(marker);
@@ -38,8 +37,8 @@ public class OverlayMap extends Map<Tile> {
 		}
 	}
 	
-	public void markTile(Point tileLocation) {
-		markers[tileLocation.x][tileLocation.y].setVisible(true);
+	public void markTile(Coordinate coordinate) {
+		markers[coordinate.x][coordinate.y].setVisible(true);
 	}
 	
 	public void reset() {

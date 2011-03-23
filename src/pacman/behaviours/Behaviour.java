@@ -13,8 +13,6 @@ import pacman.world.maps.Direction;
  */
 public abstract class Behaviour {
 	
-	public abstract void reset();
-	
 	protected MovingEntity entity;
 	public void setEntity(MovingEntity entity) {
 		this.entity = entity;
@@ -25,6 +23,10 @@ public abstract class Behaviour {
 	protected Direction heading = Direction.NONE;
 	public Direction getHeading() {
 		return heading;
+	}
+	
+	public void reset() {
+		heading = Direction.NONE;
 	}
 	
 }

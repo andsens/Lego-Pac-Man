@@ -37,6 +37,7 @@
 // b = Wall split left down
 // i = Wall split right up
 // c = Wall split right down
+// Z = Red zone tile
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
 oooooooooooooooooooooooooooo
@@ -51,7 +52,7 @@ vDLddRDlrDLddxUddRDlrDLddRDV
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
 zHHHHxDlLuuxelreUuuRrDUHHHHt
 ooooovDlUddReLReLddxrDVooooo
-ooooovDlreeeeeBeeeelrDVooooo
+ooooovDlreeeZeBZeeelrDVooooo
 ooooovDlrejHmoGnHkelrDVooooo
 ooooovDLReVogogggveLRDVooooo
 ooooovDeeeVoIgCgpveeeDVooooo
@@ -63,7 +64,7 @@ yhhhhRDLReLddxUddReLRDLhhhhw
 vDDDDDDDDDDDDlrDDDDDDDDDDDDV
 vDUuuxDUuuuxDlrDUuuuxDUuuxDV
 vDLdxrDLdddRDLRDLdddRDlUdRDV
-vEDDlrDDDDDDDPeDDDDDDDlrDDEV
+vEDDlrDDDDDDZPeZDDDDDDlrDDEV
 iuxDlrDUxDUuuuuuuxDUxDlrDUuA
 cdRDLRDlrDLddxUddRDlrDLRDLdb
 vDDDDDDlrDDDDlrDDDDlrDDDDDDV
