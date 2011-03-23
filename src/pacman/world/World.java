@@ -191,13 +191,18 @@ public class World implements ActionListener {
 		return movingEntityMap.get(entityType);
 	}
 	
+	int dotsEaten = 0;
 	public Dot eatDot(Point location) {
-		return dotMap.eat(location);
+		Dot dot = dotMap.eat(location);
+		if(dot != null)
+			dotsEaten++;
+		return dot;
 	}
 	
 	public void energize() {
 		lastEnergizer = System.currentTimeMillis();
-		movingEntityMap.frightenGhosts();
+		if(getGhostMode() != GhostMode.FRIGHTENED)
+			movingEntityMap.frightenGhosts();
 	}
 	
 	public void markTile(Coordinate coordinate) {
@@ -252,6 +257,7 @@ public class World implements ActionListener {
 	}
 	
 	public void reset() {
+		dotsEaten = 0;
 		gameStart = System.currentTimeMillis();
 		dotMap.reset();
 		movingEntityMap.reset();

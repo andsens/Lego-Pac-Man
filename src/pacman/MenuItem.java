@@ -1,8 +1,8 @@
 package pacman;
 
-import java.awt.Label;
+import pacman.world.graphics.Word;
 
-public class MenuItem extends Label {
+public class MenuItem extends Word {
 	
 	private static final long serialVersionUID = -3163172670267742403L;
 	

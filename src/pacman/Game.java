@@ -34,7 +34,7 @@ public class Game extends JFrame implements KeyListener {
 		JLayeredPane layers = getLayeredPane();
 		
 		controlScreen = new ControlScreen(this);
-		controlScreen.setLocation(100, 100);
+		controlScreen.setLocation(78, 174);
 		addKeyListener(controlScreen);
 		layers.add(controlScreen, new Integer(layers.highestLayer()+1));
 

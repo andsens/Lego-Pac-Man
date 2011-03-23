@@ -1,9 +1,10 @@
 package pacman;
 
-import java.awt.Label;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import pacman.world.graphics.Character;
 
 import javax.swing.JPanel;
 
@@ -15,27 +16,28 @@ public class ControlScreen extends JPanel implements KeyListener {
 	
 	MenuItem[] menuItems;
 	int selection = 0;
-	Label arrow;
+	Character arrow;
 	
 	Game game;
 	
 	public ControlScreen(Game game) {
 		this.game = game;
 		
-		setSize(200, 200);
+		setSize(180, 108);
 		setLayout(null);
 //		setOpaque(false);
+		setBackground(Color.BLACK);
 		menuItems = new MenuItem[4];
 		menuItems[0] = new MenuItem("NEW GAME", Option.NEWGAME);
-		menuItems[0].setLocation(50, 0);
+		menuItems[0].setLocation(50, Character.height);
 		menuItems[1] = new MenuItem("CONTINUE", Option.CONTINUE);
-		menuItems[1].setLocation(50, 30);
+		menuItems[1].setLocation(50, Character.height*3);
 		menuItems[2] = new MenuItem("OPTIONS", Option.OPTIONS);
-		menuItems[2].setLocation(50, 60);
+		menuItems[2].setLocation(50, Character.height*5);
 		menuItems[3] = new MenuItem("EXIT", Option.EXIT);
-		menuItems[3].setLocation(50, 90);
+		menuItems[3].setLocation(50, Character.height*7);
 		
-		arrow = new Label(">");
+		arrow = new Character(new Point(), '-');
 		add(arrow);
 		updateArrow();
 		for(MenuItem menuItem : menuItems)
@@ -66,6 +68,7 @@ public class ControlScreen extends JPanel implements KeyListener {
 	public void updateArrow() {
 		Point position = menuItems[selection].getLocation();
 		arrow.setLocation(position.x-20, position.y);
+		repaint();
 	}
 	
 	public void showMenu() {
