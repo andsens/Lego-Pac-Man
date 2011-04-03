@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import pacman.world.MovingEntity;
-import pacman.world.World;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 import pacman.world.tiles.Tile;
@@ -23,14 +22,14 @@ public class Pacman extends PacmanBehaviour implements KeyListener {
 	int keyPressTimeout = 200;
 	
 	long resetNext = -1;
-	Direction nextHeading = Direction.NONE;
-	public void think(World world) {
+	Direction nextHeading = Direction.LEFT;
+	public void think() {
 		Coordinate currentTile = entity.getCurrentTile();
 		
 		if(nextHeading != Direction.NONE
-		&& valid(world, nextHeading.getNext(currentTile))) {
+		&& isNavigable(nextHeading.getNext(currentTile))) {
 			heading = nextHeading;
-		} else if(valid(world, heading.getNext(currentTile))) {
+		} else if(isNavigable(heading.getNext(currentTile))) {
 			
 		} else {
 			Point location = entity.getLocation();
@@ -58,10 +57,6 @@ public class Pacman extends PacmanBehaviour implements KeyListener {
 		}
 		if(System.currentTimeMillis()-resetNext > keyPressTimeout)
 			nextHeading = Direction.NONE;
-	}
-	
-	protected boolean valid(World world, Coordinate location) {
-		return world.isValidPacmanTile(location);
 	}
 	
 	public void keyPressed(KeyEvent event) {

@@ -28,4 +28,8 @@ public class Coordinate {
 	public Coordinate clone() {
 		return new Coordinate(x, y);
 	}
+	
+	public boolean equals(Coordinate coordinate) {
+		return coordinate.x == x && coordinate.y == y;
+	}
 }

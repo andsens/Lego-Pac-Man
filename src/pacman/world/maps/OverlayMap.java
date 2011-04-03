@@ -37,7 +37,7 @@ public class OverlayMap extends Map<Tile> {
 		}
 	}
 	
-	public void markTile(Coordinate coordinate) {
+	public void markCoordinate(Coordinate coordinate) {
 		markers[coordinate.x][coordinate.y].setVisible(true);
 	}
 	

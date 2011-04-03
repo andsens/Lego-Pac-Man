@@ -30,8 +30,8 @@ public class Pacman extends MovingEntity {
 		return new Point(1, -5);
 	}
 
-	protected void think(World world) {
-		behaviour.think(world);
+	protected void think() {
+		behaviour.think();
 	}
 	
 	protected void move() {
@@ -90,21 +90,20 @@ public class Pacman extends MovingEntity {
 	}
 	
 	int dotEaten = 0;
-	protected void act(World world) {
-		Point location = getLocation();
-		location.translate(width/2, height/2);
-		Dot dot = world.eatDot(location);
+	protected void act() {
+		Dot dot = world.eatDot(getCurrentTile());
 		if(dot != null) {
 			dotEaten = 12;
-			if(Energizer.class.isInstance(dot))
-				world.energize();
 		} else {
 			if(dotEaten > 0)
 				dotEaten--;
 		}
+		Ghost ghost = world.eatGhost(getCurrentTile());
+		if(ghost != null)
+			dotEaten = 12;
 	}
 	
-	protected void animate(World world) {
+	protected void animate() {
 		Direction heading = behaviour.getHeading();
 		if(heading == Direction.NONE)
 			return;
@@ -136,49 +135,24 @@ public class Pacman extends MovingEntity {
 		}
 	}
 	
-	protected int getSpeed(World world) {
-		int level = world.getLevel();
-		GhostMode mode = world.getGhostMode();
+	protected int getSpeed(int level) {
+		boolean ghostsFrightened = world.getEnergizerLeft() > 0;
 		if(level == 1) {
-			if(mode == GhostMode.FRIGHTENED)
-				if(dotEaten > 0)
-					return 79;
-				else
-					return 90;
+			if(ghostsFrightened)
+				return dotEaten > 0 ? 79 : 90;
 			else
-				if(dotEaten > 0)
-					return 71;
-				else
-					return 80;
+				return dotEaten > 0 ? 71 : 80;
 		}
 		if(level <= 4) {
-			if(mode == GhostMode.FRIGHTENED)
-				if(dotEaten > 0)
-					return 83;
-				else
-					return 95;
+			if(ghostsFrightened)
+				return dotEaten > 0 ? 83 : 95;
 			else
-				if(dotEaten > 0)
-					return 79;
-				else
-					return 90;
+				return dotEaten > 0 ? 79 : 90;
 		}
 		if(level <= 20) {
-			if(mode == GhostMode.FRIGHTENED)
-				if(dotEaten > 0)
-					return 87;
-				else
-					return 100;
-			else
-				if(dotEaten > 0)
-					return 87;
-				else
-					return 100;
+			return dotEaten > 0 ? 87 : 100;
 		}
-		if(dotEaten > 0)
-			return 79;
-		else
-			return 90;
+		return dotEaten > 0 ? 79 : 90;
 	}
 	
 	public void energize() {
@@ -186,5 +160,9 @@ public class Pacman extends MovingEntity {
 	
 	protected Behaviour getBehaviour() {
 		return behaviour;
+	}
+	
+	public void die() {
+		
 	}
 }

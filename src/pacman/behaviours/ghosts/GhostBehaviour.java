@@ -7,35 +7,53 @@ import java.util.Random;
 
 import pacman.behaviours.Behaviour;
 import pacman.world.GhostMode;
-import pacman.world.World;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
 
 
 public abstract class GhostBehaviour extends Behaviour {
-	
+
+	private boolean reverseHeading = false;
 	private Direction nextHeading = heading;
-	private GhostMode previousMode = GhostMode.SCATTER;
-	public void think(World world) {
-		heading = nextHeading;
-		GhostMode currentMode = world.getGhostMode();
-		if(currentMode != previousMode) {
-			if(previousMode != GhostMode.FRIGHTENED
-			&& currentMode != GhostMode.FRIGHTENED) {
-				nextHeading = heading.reverse();
-				previousMode = currentMode;
-				return;
+	public void think() {
+		Coordinate currentTile = entity.getCurrentTile();
+		Coordinate targetTile = null;
+		boolean caged = isCaged();
+		if(dead) {
+			targetTile = entity.getSpawnPoint();
+			if(isGhostHouse(currentTile) || isGhostHouseGate(currentTile))
+				caged = true;
+			if(targetTile.equals(entity.getCurrentTile())) {
+				dead = false;
+				resetHeading();
 			}
-			previousMode = currentMode;
+		}
+		if(caged && !dead && !jailbreaking) {
+			targetTile = entity.getSpawnPoint();
+			if(!isGhostHouse(heading.getNext(currentTile)))
+				heading = heading.reverse();
+			return;
+		}
+		if(jailbreaking) {
+			targetTile = getGhostHouseEntrance();
+			if(targetTile.equals(entity.getCurrentTile())) {
+				caged = false;
+				jailbreaking = false;
+			}
+		}
+		if(!dead && !caged) {
+			GhostMode mode = getGhostMode();
+			if(mode == GhostMode.SCATTER)
+				targetTile = getScatterTarget();
+			if(mode == GhostMode.CHASE)
+				targetTile = getChaseTarget();
+			if(reverseHeading) {
+				nextHeading = heading.reverse();
+				reverseHeading = false;
+			}
 		}
 		
-		Coordinate currentTile = entity.getCurrentTile();
-		
-		Coordinate targetTile;
-		if(currentMode == GhostMode.SCATTER)
-			targetTile = getScatterTarget(world);
-		else
-			targetTile = getChaseTarget(world);
+		heading = nextHeading;
 		
 		Coordinate nextTile = heading.getNext(currentTile);
 		
@@ -52,16 +70,16 @@ public abstract class GhostBehaviour extends Behaviour {
 		 * when a ghost is not frightened. This is a generalized version,
 		 * should one wish to use these tiles in a vertical fashion.
 		 */
-		if(valid(world, heading.getNext(nextTile))
-		&& world.isRedZoneTile(nextTile)
-		&& currentMode != GhostMode.FRIGHTENED) {
+		if(valid(heading.getNext(nextTile))
+		&& isRedZone(nextTile)
+		&& !frightened) {
 			options.remove(heading.turn(true));
 			options.remove(heading.turn(false));
 		}
 		
 		Collection<Direction> removals = new LinkedList<Direction>();
 		for(Direction option : options) {
-			if(!valid(world, option.getNext(nextTile)))
+			if(!valid(option.getNext(nextTile)))
 				removals.add(option);
 		}
 		for(Direction removal : removals)
@@ -71,7 +89,7 @@ public abstract class GhostBehaviour extends Behaviour {
 			System.err.println("No options left to move to.");
 			nextHeading = Direction.NONE;
 		} else {
-			if(currentMode != GhostMode.FRIGHTENED) {
+			if(!isFrightened()) {
 				double minDistance = -1;
 				for(Direction option : options) {
 					double distance = option.getNext(nextTile).distance(targetTile);
@@ -84,7 +102,7 @@ public abstract class GhostBehaviour extends Behaviour {
 					}
 				}
 			} else {
-				switch(frightenedBehaviour.nextInt(3)) {
+				switch(frightenedDirections.nextInt(3)) {
 				case 0:
 					nextHeading = Direction.UP;
 					break;
@@ -104,22 +122,81 @@ public abstract class GhostBehaviour extends Behaviour {
 		}
 	}
 	
+	private boolean valid(Coordinate coordinate) {
+		if(dead || jailbreaking)
+			return isNavigable(coordinate) || isGhostHouse(coordinate) || isGhostHouseGate(coordinate);
+		if(isCaged())
+			return isGhostHouse(coordinate);
+		return isNavigable(coordinate);
+	}
+	
+	private boolean frightened = false;
 	public void frighten() {
-		nextHeading = heading.reverse();
+		if(!dead && !isCaged()) {
+			frightened = true;
+			reverseHeading = true;
+		}
 	}
 	
-	protected boolean valid(World world, Coordinate location) {
-		return world.isValidGhostTile(location);
+	public void unfrighten() {
+		frightened = false;
 	}
 	
-	Random frightenedBehaviour = new Random();
+	public boolean isFrightened() {
+		return frightened;
+	}
+	
+	boolean dead = false;
+	public boolean isDead() {
+		return dead;
+	}
+	
+	public boolean isCaged() {
+		Coordinate currentTile = entity.getCurrentTile();
+		return isGhostHouse(currentTile) || isGhostHouseGate(currentTile);
+	}
+	
+	private boolean jailbreaking = false;
+	public boolean jailbreak() {
+		if(!isCaged())
+			return false;
+		frightened = false;
+		jailbreaking = true;
+		return true;
+	}
+	
+	public void die() {
+		frightened = false;
+		dead = true;
+		jailbreaking = false;
+	}
+	
+	Random frightenedDirections = new Random();
 	public void reset() {
-		frightenedBehaviour.setSeed(13465227);
+		frightenedDirections.setSeed(13465227);
 		nextHeading = heading;
-		previousMode = GhostMode.SCATTER;
+		frightened = false;
+		dead = false;
+		jailbreaking = false;
 	}
 	
-	protected abstract Coordinate getScatterTarget(World world);
+	private int dotCount = 0;
+	public boolean countDot(int level) {
+		if(!isGhostHouse(entity.getCurrentTile()))
+			return false;
+		int dotLimit = 0;
+		if(level < 3)
+			dotLimit = getDotLimit(level);
+		if(++dotCount > dotLimit)
+			jailbreak();
+		return true;
+	}
 	
-	protected abstract Coordinate getChaseTarget(World world);
+	protected abstract Coordinate getScatterTarget();
+	
+	protected abstract Coordinate getChaseTarget();
+	
+	protected abstract int getDotLimit(int level);
+	
+	protected abstract void resetHeading();
 }

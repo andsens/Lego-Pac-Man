@@ -1,10 +1,8 @@
 package pacman.behaviours.ghosts;
 
 import pacman.world.MovingEntity;
-import pacman.world.World;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
-import pacman.world.maps.Type;
 
 /**
  * Inky is the blue ghost. See a description of Inky behaviour <a href="../../../Ghost Behaviour/index.htm#Inky">here</a>.
@@ -16,16 +14,16 @@ import pacman.world.maps.Type;
 public class Inky extends GhostBehaviour {
 
 	public Inky() {
-		heading = Direction.LEFT;
+		resetHeading();
 	}
 	
-	public void reset() {
-		heading = Direction.LEFT;
+	public void resetHeading() {
+		heading = Direction.UP;
 	}
 	
-	protected Coordinate getChaseTarget(World world) {
-		MovingEntity pacman = world.getMovingEntity(Type.PACMAN);
-		MovingEntity blinky = world.getMovingEntity(Type.BLINKY);
+	protected Coordinate getChaseTarget() {
+		MovingEntity pacman = getPacman();
+		MovingEntity blinky = getBlinky();
 		
 		Coordinate targetTile = pacman.getCurrentTile();
 		heading.translate(targetTile, 2);
@@ -37,12 +35,18 @@ public class Inky extends GhostBehaviour {
 		int vectorY = targetTile.y-blinkyTile.y;
 		
 		targetTile.translate(vectorX, vectorY);
-		world.capTileLocation(targetTile);
+		capTileLocation(targetTile);
 		return targetTile;
 	}
 	
 	private Coordinate scatterTarget = new Coordinate(27, 34);
-	protected Coordinate getScatterTarget(World world) {
+	protected Coordinate getScatterTarget() {
 		return scatterTarget;
+	}
+
+	protected int getDotLimit(int level) {
+		if(level == 1)
+			return 30;
+		return 0;
 	}
 }

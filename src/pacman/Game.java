@@ -27,7 +27,7 @@ public class Game extends JFrame implements KeyListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setIconImage(ImageIO.read(new File("icon.png")));
 		setResizable(false);
-
+		
 		state = State.STOPPED;
 		world = new World(this, new StandardPacmanBehaviours());
 

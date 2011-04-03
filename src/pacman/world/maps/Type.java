@@ -9,6 +9,7 @@ import pacman.world.Ghost;
 import pacman.world.MovingEntity;
 import pacman.world.Pacman;
 import pacman.world.tiles.EmptyTile;
+import pacman.world.tiles.GhostHouseGateTile;
 import pacman.world.tiles.GhostHouseTile;
 import pacman.world.tiles.NavigableTile;
 import pacman.world.tiles.RedZoneTile;
@@ -25,7 +26,7 @@ public enum Type {
 	SPLT_RGT_UP('i'), SPLT_RGT_DWN('c'),
 	UP('u'), LEFT('l'), DOWN('d'), RIGHT('r'),
 	UPLFT('U'), DWNLFT('L'), DWNRGT('R'), UPRGT('x'),
-	OOB('o'), EMPTY('e'), GHOSTHOUSE('g'), BARRIER('G'), REDZONE('Z'),
+	OOB('o'), EMPTY('e'), GHOSTHOUSE('g'), GHOSTHOUSEGATE('G'), GHOSTHOUSEGATE_OOB('F'), REDZONE('Z'),
 	DOT('D'), ENERGIZER('E'),
 	PACMAN('P'), BLINKY('B'), PINKY('p'), INKY('I'), CLYDE('C');
 	
@@ -55,13 +56,15 @@ public enum Type {
 			return new NavigableTile(location);
 		case REDZONE:
 			return new RedZoneTile(location);
-		case BARRIER:
-			return new GhostHouseTile(location, true);
+		case GHOSTHOUSEGATE:
+			return new GhostHouseGateTile(location, false);
+		case GHOSTHOUSEGATE_OOB:
+			return new GhostHouseGateTile(location, true);
 		case GHOSTHOUSE:
 		case INKY:
 		case PINKY:
 		case CLYDE:
-			return new GhostHouseTile(location, false);
+			return new GhostHouseTile(location);
 		case UP:
 		case LEFT:
 		case DOWN:

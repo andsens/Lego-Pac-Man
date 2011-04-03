@@ -2,12 +2,12 @@ package pacman.world;
 
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -36,11 +36,12 @@ import pacman.world.tiles.Tile;
 public class World implements ActionListener {
 
 	private static final long serialVersionUID = -7706020584659519598L;
-	
-	private static final int tickSpeed = 20;
+
+	public static final int ticksPerSecond = 100;
+	private static final int timerSpeed = 10;
 	
 	private Timer timer;
-	private int tickCount = 1;
+	private long tickCount = 0;
 	
 	private JFrame window;
 	
@@ -55,9 +56,9 @@ public class World implements ActionListener {
 	public World(JFrame window, BehaviourFactory behaviours) throws IOException {
 		this.window = window;
 		this.behaviours = behaviours;
+		behaviours.setWorld(this);
 		
-		timer = new Timer(tickSpeed, this);
-		timer.addActionListener(this);
+		timer = new Timer(timerSpeed, this);
 		
 		map = new TypeMap(new File("maps/classic.txt"));
 		
@@ -80,6 +81,7 @@ public class World implements ActionListener {
 		layers.add(dotMap, new Integer(3));
 		
 		movingEntityMap = new MovingEntityMap(map, behaviours);
+		movingEntityMap.setWorld(this);
 		layers.add(movingEntityMap, new Integer(4));
 		
 		overlayMap = new OverlayMap(map);
@@ -88,13 +90,13 @@ public class World implements ActionListener {
 		layers.paintComponents(layers.getGraphics());
 	}
 	
-	int level = 1;
+	int level = 0;
 	public int getLevel() {
 		return level;
 	}
 	
 	long lastEnergizer = 0;
-	public long getEnergizerLeft() {
+	public int getEnergizerLeft() {
 		int energizerSeconds = 0;
 		switch(level) {
 		case  1: energizerSeconds = 6; break;
@@ -116,14 +118,13 @@ public class World implements ActionListener {
 		case 17: energizerSeconds = 1; break;
 		case 18: energizerSeconds = 1; break;
 		}
-		return Math.max(0, energizerSeconds*1000 - System.currentTimeMillis() + lastEnergizer);
+		if(lastEnergizer == 0)
+			return 0;
+		return (int) Math.max(0, lastEnergizer + energizerSeconds*ticksPerSecond - tickCount);
 	}
 	
 	public GhostMode getGhostMode() {
-		if(getEnergizerLeft() > 0)
-			return GhostMode.FRIGHTENED;
-		
-		int gameSeconds = (int) Math.ceil((System.currentTimeMillis()-gameStart)/1000);
+		int gameSeconds = (int) Math.ceil(tickCount/ticksPerSecond);
 		if(level == 1) {
 			if(gameSeconds <= 7)
 				return GhostMode.SCATTER;
@@ -154,7 +155,7 @@ public class World implements ActionListener {
 				return GhostMode.SCATTER;
 			if(gameSeconds <= 1092)
 				return GhostMode.CHASE;
-			if(System.currentTimeMillis()-gameStart <= 1092+1/60)
+			if(tickCount/ticksPerSecond <= 1092+1/60)
 				return GhostMode.SCATTER;
 			return GhostMode.CHASE;
 		}
@@ -170,98 +171,190 @@ public class World implements ActionListener {
 			return GhostMode.SCATTER;
 		if(gameSeconds <= 1092)
 			return GhostMode.CHASE;
-		if(System.currentTimeMillis()-gameStart <= 1092+1/60)
+		if(tickCount/ticksPerSecond <= 1092+1/60)
 			return GhostMode.SCATTER;
 		return GhostMode.CHASE;
 	}
-	
-	public boolean isValidPacmanTile(Coordinate coordinate) {
-		return wallMap.isValidPacmanTile(coordinate);
+
+	long lastDotEaten;
+	public Dot eatDot(Coordinate coordinate) {
+		Dot dot = dotMap.eat(coordinate);
+		if(dot != null) {
+			lastDotEaten = tickCount;
+			countDot();
+			if(Energizer.class.isInstance(dot))
+				energize();
+		}
+		return dot;
 	}
 	
-	public boolean isValidGhostTile(Coordinate coordinate) {
-		return wallMap.isValidGhostTile(coordinate);
+	private boolean countGlobal = false;
+	private int globalDotCount = 0;
+	private void countDot() {
+		Ghost blinky = (Ghost) movingEntityMap.get(Type.BLINKY);
+		Ghost pinky = (Ghost) movingEntityMap.get(Type.PINKY);
+		Ghost inky = (Ghost) movingEntityMap.get(Type.INKY);
+		Ghost clyde = (Ghost) movingEntityMap.get(Type.CLYDE);
+		
+		if(countGlobal) {
+			globalDotCount++;
+			switch(globalDotCount) {
+			case 7:
+				pinky.jailbreak();
+				break;
+			case 17:
+				inky.jailbreak();
+				break;
+			case 32:
+				if(isGhostHouse(clyde.getCurrentTile())
+				|| isGhostHouseGate(clyde.getCurrentTile())) {
+					clyde.jailbreak();
+					globalDotCount = 0;
+					countGlobal = false;
+				}
+				break;
+			}
+			return;
+		}
+		if(blinky.countDot(level))
+			return;
+		if(pinky.countDot(level))
+			return;
+		if(inky.countDot(level))
+			return;
+		if(clyde.countDot(level))
+			return;
 	}
 	
-	public boolean isRedZoneTile(Coordinate coordinate) {
-		return wallMap.isRedZoneTile(coordinate);
+	public Ghost eatGhost(Coordinate coordinate) {
+		if(getEnergizerLeft() == 0)
+			return null;
+		List<Ghost> ghosts = movingEntityMap.getGhosts();
+		for(Ghost ghost : ghosts) {
+			if(ghost.getCurrentTile().equals(coordinate)) {
+				suspendTickCount = true;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				suspendTickCount = false;
+				ghost.die();
+				return ghost;
+			}
+		}
+		return null;
+	}
+	
+	private void ghoustHouseTimer() {
+		Ghost blinky = (Ghost) movingEntityMap.get(Type.BLINKY);
+		Ghost pinky = (Ghost) movingEntityMap.get(Type.PINKY);
+		Ghost inky = (Ghost) movingEntityMap.get(Type.INKY);
+		Ghost clyde = (Ghost) movingEntityMap.get(Type.CLYDE);
+		
+		long lastDotEatenThreshold = level <= 4 ? 4 * ticksPerSecond : 3 * ticksPerSecond;
+		if(tickCount - lastDotEaten > lastDotEatenThreshold) {
+			lastDotEaten = tickCount;
+			if(blinky.jailbreak())
+				return;
+			if(pinky.jailbreak())
+				return;
+			if(inky.jailbreak())
+				return;
+			if(clyde.jailbreak())
+				return;
+		}
+	}
+	
+	public void energize() {
+		lastEnergizer = tickCount;
+		movingEntityMap.frightenGhosts();
+	}
+	
+	public void markCoordinate(Coordinate coordinate) {
+		overlayMap.markCoordinate(coordinate);
+	}
+	
+	public boolean isNavigable(Coordinate coordinate) {
+		return wallMap.isNavigable(coordinate);
+	}
+	
+	public boolean isGhostHouse(Coordinate coordinate) {
+		return wallMap.isGhostHouse(coordinate);
+	}
+	
+	public boolean isGhostHouseGate(Coordinate coordinate) {
+		return wallMap.isGhostHouseGate(coordinate);
+	}
+	
+	public boolean isRedZone(Coordinate coordinate) {
+		return wallMap.isRedZone(coordinate);
+	}
+	
+	public Coordinate getSpawnPoint(Type type) {
+		return wallMap.getSpawnPoint(type);
+	}
+	
+	public Coordinate getGhostHouseEntrance() {
+		return wallMap.getGhostHouseEntrance();
 	}
 	
 	public MovingEntity getMovingEntity(Type entityType) {
 		return movingEntityMap.get(entityType);
 	}
 	
-	int dotsEaten = 0;
-	public Dot eatDot(Point location) {
-		Dot dot = dotMap.eat(location);
-		if(dot != null)
-			dotsEaten++;
-		return dot;
+	public int getMapWidth() {
+		return map.getWidth();
 	}
 	
-	public void energize() {
-		lastEnergizer = System.currentTimeMillis();
-		if(getGhostMode() != GhostMode.FRIGHTENED)
-			movingEntityMap.frightenGhosts();
-	}
-	
-	public void markTile(Coordinate coordinate) {
-		overlayMap.markTile(coordinate);
+	public int getMapHeight() {
+		return map.getHeight();
 	}
 	
 	public void clearMarkings() {
 		overlayMap.reset();
 	}
-
-	public void capTileLocation(Coordinate tile) {
-		tile.x = tile.x > 0 ? Math.min(tile.x, map.getWidth()-1) : 0;
-		tile.y = tile.y > 0 ? Math.min(tile.y, map.getHeight()-1) : 0;
-	}
 	
-	public void tick() {
-		if(++tickCount > 100)
-			tickCount = 1;
-		movingEntityMap.tick(this);
-		dotMap.tick(this);
-	}
-	
-	public int getTickCount() {
-		return tickCount;
-	}
-
+	boolean suspendTickCount = false;
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timer) {
-			tick();
+			if(!suspendTickCount) {
+				tickCount++;
+				movingEntityMap.tick(tickCount);
+				ghoustHouseTimer();
+			}
 		}
 	}
 	
-	long gameStart;
+	private void nextLevel() {
+		level++;
+		tickCount = 0;
+		lastDotEaten = 0;
+		dotMap.reset();
+		movingEntityMap.reset();
+		overlayMap.reset();
+	}
+	
 	public void restart() {
 		reset();
+		nextLevel();
 		unpause();
 	}
 	
-	long gamePause;
 	public void unpause() {
-		gameStart += gamePause - gameStart;
 		timer.start();
 		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
 			window.addKeyListener((KeyListener) behaviours.getPacmanBehaviour());
 	}
 	
 	public void pause() {
-		gamePause = System.currentTimeMillis();
 		timer.stop();
 		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
 			window.removeKeyListener((KeyListener) behaviours.getPacmanBehaviour());
 	}
 	
 	public void reset() {
-		dotsEaten = 0;
-		gameStart = System.currentTimeMillis();
-		dotMap.reset();
-		movingEntityMap.reset();
-		overlayMap.reset();
-		tickCount = 1;
+		level = 0;
 	}
 }

@@ -1,12 +1,15 @@
 package pacman.world.maps;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import pacman.behaviours.factories.BehaviourFactory;
 import pacman.world.Changeable;
 import pacman.world.Ghost;
 import pacman.world.MovingEntity;
+import pacman.world.Pacman;
 import pacman.world.World;
 import pacman.world.tiles.Tile;
 
@@ -41,13 +44,26 @@ public class MovingEntityMap extends Map<MovingEntity> implements Changeable  {
 		}
 	}
 	
-	public void tick(World world) {
+	public void tick(long count) {
 		for(MovingEntity entity : entities.values())
-			entity.tick(world);
+			entity.tick(count);
+	}
+	
+	public void setWorld(World world) {
+		for(MovingEntity entity : entities.values())
+			entity.setWorld(world);
 	}
 	
 	public MovingEntity get(Type type) {
 		return entities.get(type);
+	}
+	
+	public List<Ghost> getGhosts() {
+		List<Ghost> ghosts = new ArrayList<Ghost>();
+		for(MovingEntity ghost : entities.values())
+			if(!Pacman.class.isInstance(ghost))
+				ghosts.add((Ghost) ghost);
+		return ghosts;
 	}
 	
 	public void frightenGhosts() {

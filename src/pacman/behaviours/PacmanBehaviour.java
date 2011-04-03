@@ -1,6 +1,7 @@
 package pacman.behaviours;
 
 
+
 public abstract class PacmanBehaviour extends Behaviour {
 	
 	protected pacman.world.Pacman entity;

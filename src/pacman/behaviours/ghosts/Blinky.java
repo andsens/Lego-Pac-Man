@@ -1,9 +1,7 @@
 package pacman.behaviours.ghosts;
 
-import pacman.world.World;
 import pacman.world.maps.Coordinate;
 import pacman.world.maps.Direction;
-import pacman.world.maps.Type;
 
 /**
  * Blinky is the red ghost. See a description of Blinky's behaviour <a href="../../../Ghost Behaviour/index.htm#Blinky">here</a>.
@@ -15,19 +13,23 @@ import pacman.world.maps.Type;
 public class Blinky extends GhostBehaviour {
 	
 	public Blinky() {
+		resetHeading();
+	}
+	
+	public void resetHeading() {
 		heading = Direction.LEFT;
 	}
 	
-	public void reset() {
-		heading = Direction.LEFT;
-	}
-	
-	protected Coordinate getChaseTarget(World world) {
-		return world.getMovingEntity(Type.PACMAN).getCurrentTile();
+	protected Coordinate getChaseTarget() {
+		return getPacman().getCurrentTile();
 	}
 	
 	private Coordinate scatterTarget = new Coordinate(25, 0);
-	protected Coordinate getScatterTarget(World world) {
+	protected Coordinate getScatterTarget() {
 		return scatterTarget;
+	}
+	
+	protected int getDotLimit(int level) {
+		return 0;
 	}
 }

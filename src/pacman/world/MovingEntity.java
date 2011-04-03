@@ -22,45 +22,36 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	public static int width = 22;
 	public static int height = 22;
 	
+	private Coordinate spawnPoint;
+	
 	public MovingEntity(Point location) {
 		super(location);
 		setSize(width, height);
+		spawnPoint = getCurrentTile();
 	}
 	
-	public final void tick(World world) {
+	protected World world;
+	public void setWorld(World world) {
+		this.world = world;
+	}
+	
+	public final void tick(long ticks) {
 		boolean shouldMove = true;
-		int speed = getSpeed(world);
+		int speed = getSpeed(world.getLevel());
 		if(speed == 0) {
 			shouldMove = false;
 		} else if(speed < 100) {
 			float rate = 100/(100-speed);
-			int tickCount = world.getTickCount();
-			if(tickCount % rate < 0.5
-			|| (tickCount % rate == 0.5 && tickCount + 1 % rate < 0.5)) {
+			if(ticks % rate < 0.5
+			|| (ticks % rate == 0.5 && ticks + 1 % rate < 0.5)) {
 				shouldMove = false;
 			}
 		}
 		if(shouldMove) {
-			think(world);
+			think();
 			move();
-			act(world);
-			animate(world);
-		}
-	}
-	
-	protected Point getEdge(Direction side) {
-		switch(side) {
-		case UP:
-			return new Point(11, 6);
-		case LEFT:
-			return new Point(6, 11);
-		case DOWN:
-			return new Point(11, 16);
-		case RIGHT:
-			return new Point(16, 11);
-		case NONE:
-		default:
-			return new Point(11, 11);
+			act();
+			animate();
 		}
 	}
 	
@@ -75,22 +66,28 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	
 	protected abstract Behaviour getBehaviour();
 	
-	protected abstract void think(World world);
+	protected abstract void think();
 	
 	protected void move() {
-		Direction heading = getBehaviour().getHeading();
+		Direction heading = getHeading();
 		Point location = getLocation();
 		heading.translate(location);
 		setLocation(location);
 	}
 	
-	protected abstract void act(World world);
+	protected abstract void act();
 	
-	protected abstract void animate(World world);
+	protected abstract void animate();
 	
-	protected abstract int getSpeed(World world);
+	protected abstract int getSpeed(int level);
+	
+	protected abstract void die();
 	
 	public Direction getHeading() {
 		return getBehaviour().getHeading();
+	}
+	
+	public Coordinate getSpawnPoint() {
+		return spawnPoint;
 	}
 }

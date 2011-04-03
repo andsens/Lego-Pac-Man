@@ -2,7 +2,6 @@ package pacman.world.maps;
 
 import javax.swing.JPanel;
 
-import pacman.world.World;
 import pacman.world.graphics.Graphic;
 import pacman.world.tiles.Tile;
 
@@ -26,9 +25,5 @@ public abstract class Map<T extends Graphic> extends JPanel {
 	
 	public void add(T graphic) {
 		super.add(graphic);
-	}
-	
-	public void tick(World world) {
-		
 	}
 }

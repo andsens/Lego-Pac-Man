@@ -2,8 +2,17 @@ package pacman.behaviours.factories;
 
 import pacman.behaviours.PacmanBehaviour;
 import pacman.behaviours.ghosts.GhostBehaviour;
+import pacman.world.World;
 
 public abstract class BehaviourFactory {
+	
+	public void setWorld(World world) {
+		getPacmanBehaviour().setWorld(world);
+		getBlinkyBehaviour().setWorld(world);
+		getPinkyBehaviour().setWorld(world);
+		getInkyBehaviour().setWorld(world);
+		getClydeBehaviour().setWorld(world);
+	}
 	
 	PacmanBehaviour pacman;
 	public final PacmanBehaviour getPacmanBehaviour() {

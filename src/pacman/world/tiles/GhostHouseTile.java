@@ -6,9 +6,9 @@ public class GhostHouseTile extends Tile {
 
 	private static final long serialVersionUID = 2979410766158923458L;
 
-	public GhostHouseTile(Point location, boolean isBarrier) {
+	public GhostHouseTile(Point location) {
 		super(location);
-		spriteTile = isBarrier?new Point(14, 6):new Point(0, 4);
+		spriteTile = new Point(0, 4);
 	}
 
 }
