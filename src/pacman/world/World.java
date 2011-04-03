@@ -258,7 +258,9 @@ public class World implements ActionListener {
 			if(!ghost.isFrightened())
 				continue;
 			if(ghost.getCurrentTile().equals(coordinate)) {
-				statusMap.showGhostScore(coordinate, ghostsKilled++);
+				statusMap.showGhostScore(coordinate, ghostsKilled);
+				statusMap.increaseScore((int) Math.pow(2, ghostsKilled) * 200);
+				ghostsKilled++;
 				pauseFor = (int) (ticksPerSecond);
 				ghost.setVisible(false);
 				movingEntityMap.get(Type.PACMAN).setVisible(false);
