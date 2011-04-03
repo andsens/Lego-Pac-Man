@@ -56,11 +56,8 @@ public class Ghost extends MovingEntity {
 			behaviour.think();
 	}
 	
-	public void frighten() {
-		behaviour.frighten();
-	}
-	
 	protected void act() {
+		world.killPacman(this);
 	}
 	
 	int wiggle = 0;
@@ -71,7 +68,7 @@ public class Ghost extends MovingEntity {
 			waggle = waggle == 0 ? 2 : 0;
 		}
 
-		if(behaviour.isFrightened()) {
+		if(isFrightened()) {
 			int energizerLeft = world.getEnergizerLeft();
 			int blink = energizerLeft % 40;
 			if(energizerLeft <= 2*World.ticksPerSecond && blink < 20)
@@ -81,7 +78,7 @@ public class Ghost extends MovingEntity {
 			return;
 		}
 		Point baseTile;
-		if(behaviour.isDead())
+		if(isDead())
 			baseTile = new Point(16, 20);
 		else
 			baseTile = this.baseTile;
@@ -105,9 +102,9 @@ public class Ghost extends MovingEntity {
 	}
 	
 	protected int getSpeed(int level) {
-		if(behaviour.isDead())
+		if(isDead())
 			return 100;
-		if(behaviour.isCaged())
+		if(isCaged())
 			return 50;
 		boolean frightened = behaviour.isFrightened();
 		if(level == 1)
@@ -121,8 +118,21 @@ public class Ghost extends MovingEntity {
 		return behaviour;
 	}
 	
+	public void reset() {
+		super.reset();
+		spriteTile = baseTile;
+	}
+	
 	public boolean countDot(int level) {
 		return behaviour.countDot(level);
+	}
+	
+	public void frighten() {
+		behaviour.frighten();
+	}
+	
+	public void reverseHeading() {
+		behaviour.reverseHeading();
 	}
 	
 	public boolean jailbreak() {
@@ -131,5 +141,17 @@ public class Ghost extends MovingEntity {
 	
 	public void die() {
 		behaviour.die();
+	}
+	
+	public boolean isDead() {
+		return behaviour.isDead();
+	}
+	
+	public boolean isFrightened() {
+		return behaviour.isFrightened();
+	}
+	
+	public boolean isCaged() {
+		return behaviour.isCaged();
 	}
 }

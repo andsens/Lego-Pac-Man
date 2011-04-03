@@ -20,7 +20,7 @@ public abstract class GhostBehaviour extends Behaviour {
 		Coordinate targetTile = null;
 		boolean caged = isCaged();
 		if(dead) {
-			targetTile = entity.getSpawnPoint();
+			targetTile = getGhostHouseTarget();
 			if(isGhostHouse(currentTile) || isGhostHouseGate(currentTile))
 				caged = true;
 			if(targetTile.equals(entity.getCurrentTile())) {
@@ -29,7 +29,7 @@ public abstract class GhostBehaviour extends Behaviour {
 			}
 		}
 		if(caged && !dead && !jailbreaking) {
-			targetTile = entity.getSpawnPoint();
+			targetTile = getGhostHouseTarget();
 			if(!isGhostHouse(heading.getNext(currentTile)))
 				heading = heading.reverse();
 			return;
@@ -132,10 +132,14 @@ public abstract class GhostBehaviour extends Behaviour {
 	
 	private boolean frightened = false;
 	public void frighten() {
-		if(!dead && !isCaged()) {
+		if(!dead && !isCaged())
 			frightened = true;
+		reverseHeading = true;
+	}
+	
+	public void reverseHeading() {
+		if(!frightened)
 			reverseHeading = true;
-		}
 	}
 	
 	public void unfrighten() {
@@ -174,6 +178,8 @@ public abstract class GhostBehaviour extends Behaviour {
 	Random frightenedDirections = new Random();
 	public void reset() {
 		frightenedDirections.setSeed(13465227);
+		resetHeading();
+		reverseHeading = false;
 		nextHeading = heading;
 		frightened = false;
 		dead = false;
@@ -195,6 +201,8 @@ public abstract class GhostBehaviour extends Behaviour {
 	protected abstract Coordinate getScatterTarget();
 	
 	protected abstract Coordinate getChaseTarget();
+	
+	protected abstract Coordinate getGhostHouseTarget();
 	
 	protected abstract int getDotLimit(int level);
 	

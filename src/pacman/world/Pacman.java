@@ -162,7 +162,22 @@ public class Pacman extends MovingEntity {
 		return behaviour;
 	}
 	
-	public void die() {
-		
+	public void reset() {
+		super.reset();
+		spriteTile = new Point(0, 16);
+		dyingAnimationStart = 0;
+	}
+	
+	private long dyingAnimationStart;
+	public boolean die(long ticks) {
+		if(dyingAnimationStart == 0)
+			dyingAnimationStart = ticks;
+		int offset = (int) ((ticks-dyingAnimationStart)/15);
+		if(offset > 14)
+			return true;
+		offset = Math.min(10, offset);
+		spriteTile = new Point(8 + offset * 2, 16);
+		repaint();
+		return false;
 	}
 }

@@ -20,6 +20,7 @@ import pacman.world.maps.Coordinate;
 import pacman.world.maps.DotMap;
 import pacman.world.maps.MovingEntityMap;
 import pacman.world.maps.OverlayMap;
+import pacman.world.maps.StatusMap;
 import pacman.world.maps.Type;
 import pacman.world.maps.TypeMap;
 import pacman.world.maps.WallMap;
@@ -38,7 +39,7 @@ public class World implements ActionListener {
 	private static final long serialVersionUID = -7706020584659519598L;
 
 	public static final int ticksPerSecond = 100;
-	private static final int timerSpeed = 10;
+	public static final int timerSpeed = 10;
 	
 	private Timer timer;
 	private long tickCount = 0;
@@ -51,6 +52,7 @@ public class World implements ActionListener {
 	private WallMap wallMap;
 	private DotMap dotMap;
 	private MovingEntityMap movingEntityMap;
+	private StatusMap statusMap;
 	private OverlayMap overlayMap;
 
 	public World(JFrame window, BehaviourFactory behaviours) throws IOException {
@@ -84,8 +86,11 @@ public class World implements ActionListener {
 		movingEntityMap.setWorld(this);
 		layers.add(movingEntityMap, new Integer(4));
 		
+		statusMap = new StatusMap(map);
+		layers.add(statusMap, new Integer(5));
+		
 		overlayMap = new OverlayMap(map);
-		layers.add(overlayMap, new Integer(5));
+		layers.add(overlayMap, new Integer(6));
 		
 		layers.paintComponents(layers.getGraphics());
 	}
@@ -123,7 +128,21 @@ public class World implements ActionListener {
 		return (int) Math.max(0, lastEnergizer + energizerSeconds*ticksPerSecond - tickCount);
 	}
 	
+	private GhostMode ghostMode = GhostMode.SCATTER;
+	private GhostMode previousGhostMode = ghostMode;
 	public GhostMode getGhostMode() {
+		return ghostMode;
+	}
+	
+	private void setGhostMode() {
+		previousGhostMode = ghostMode;
+		ghostMode = calculateGhostMode();
+		if(previousGhostMode != ghostMode)
+			for(Ghost ghost : movingEntityMap.getGhosts())
+				ghost.reverseHeading();
+	}
+	
+	private GhostMode calculateGhostMode() {
 		int gameSeconds = (int) Math.ceil(tickCount/ticksPerSecond);
 		if(level == 1) {
 			if(gameSeconds <= 7)
@@ -182,8 +201,12 @@ public class World implements ActionListener {
 		if(dot != null) {
 			lastDotEaten = tickCount;
 			countDot();
-			if(Energizer.class.isInstance(dot))
+			if(Energizer.class.isInstance(dot)) {
 				energize();
+				statusMap.increaseScore(50);
+			} else {
+				statusMap.increaseScore(10);
+			}
 		}
 		return dot;
 	}
@@ -226,25 +249,35 @@ public class World implements ActionListener {
 			return;
 	}
 	
+	private int ghostsKilled = 0;
 	public Ghost eatGhost(Coordinate coordinate) {
-		if(getEnergizerLeft() == 0)
-			return null;
 		List<Ghost> ghosts = movingEntityMap.getGhosts();
 		for(Ghost ghost : ghosts) {
+			if(ghost.isDead())
+				continue;
+			if(!ghost.isFrightened())
+				continue;
 			if(ghost.getCurrentTile().equals(coordinate)) {
-				suspendTickCount = true;
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				suspendTickCount = false;
+				statusMap.showGhostScore(coordinate, ghostsKilled++);
+				pauseFor = (int) (ticksPerSecond);
+				ghost.setVisible(false);
+				movingEntityMap.get(Type.PACMAN).setVisible(false);
 				ghost.die();
 				return ghost;
 			}
 		}
 		return null;
+	}
+	
+	private boolean pacmanDying = false;
+	public void killPacman(Ghost ghost) {
+		if(ghost.isFrightened() || ghost.isDead())
+			return;
+		Pacman pacman = (Pacman) movingEntityMap.get(Type.PACMAN);
+		if(pacman.getCurrentTile().equals(ghost.getCurrentTile())) {
+			pacmanDying = true;
+			pauseFor = (int) (1 * ticksPerSecond);
+		}
 	}
 	
 	private void ghoustHouseTimer() {
@@ -268,8 +301,10 @@ public class World implements ActionListener {
 	}
 	
 	public void energize() {
+		ghostsKilled = 0;
 		lastEnergizer = tickCount;
-		movingEntityMap.frightenGhosts();
+		for(Ghost ghost : movingEntityMap.getGhosts())
+			ghost.frighten();
 	}
 	
 	public void markCoordinate(Coordinate coordinate) {
@@ -316,24 +351,74 @@ public class World implements ActionListener {
 		overlayMap.reset();
 	}
 	
-	boolean suspendTickCount = false;
+	int pauseFor = 0;
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == timer) {
-			if(!suspendTickCount) {
-				tickCount++;
-				movingEntityMap.tick(tickCount);
-				ghoustHouseTimer();
+			if(pauseFor > 0) {
+				pauseFor--;
+				if(pauseFor == 0)
+					resumed();
+				else
+					return;
 			}
+			tickCount++;
+			if(pacmanDying) {
+				Pacman pacman = (Pacman) movingEntityMap.get(Type.PACMAN);
+				if(pacman.die(tickCount)) {
+					pacmanDying = false;
+					if(pacmanLives == 0) {
+						gameOver();
+					} else {
+						nextLife();
+					}
+					return;
+				}
+				for(Ghost ghost : movingEntityMap.getGhosts())
+					ghost.setVisible(false);
+				return;
+			}
+			if(dotMap.getDotsLeft() == 0) {
+				nextLevel();
+				return;
+			}
+			setGhostMode();
+			movingEntityMap.tick(tickCount);
+			ghoustHouseTimer();
+			
 		}
+	}
+	
+	private void resumed() {
+		statusMap.hideGhostScore();
+		for(MovingEntity entity : movingEntityMap.getEntities())
+			entity.setVisible(true);
+	}
+	
+	private int pacmanLives = 3;
+	private void nextLife() {
+		pacmanLives--;
+		countGlobal = true;
+		globalDotCount = 0;
+		tickCount = 0;
+		lastDotEaten = 0;
+		ghostsKilled = 0;
+		movingEntityMap.reset();
+		pauseFor = (int) (1.5 * ticksPerSecond);
 	}
 	
 	private void nextLevel() {
 		level++;
 		tickCount = 0;
 		lastDotEaten = 0;
+		ghostsKilled = 0;
 		dotMap.reset();
 		movingEntityMap.reset();
 		overlayMap.reset();
+		pauseFor = (int) (1.5 * ticksPerSecond);
+	}
+	
+	private void gameOver() {
+		
 	}
 	
 	public void restart() {
@@ -356,5 +441,6 @@ public class World implements ActionListener {
 	
 	public void reset() {
 		level = 0;
+		statusMap.reset();
 	}
 }

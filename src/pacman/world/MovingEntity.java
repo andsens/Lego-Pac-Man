@@ -81,7 +81,11 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	
 	protected abstract int getSpeed(int level);
 	
-	protected abstract void die();
+	public void reset() {
+		super.reset();
+		getBehaviour().reset();
+		setVisible(true);
+	}
 	
 	public Direction getHeading() {
 		return getBehaviour().getHeading();

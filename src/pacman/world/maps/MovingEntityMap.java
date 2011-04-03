@@ -58,18 +58,19 @@ public class MovingEntityMap extends Map<MovingEntity> implements Changeable  {
 		return entities.get(type);
 	}
 	
+	public List<MovingEntity> getEntities() {
+		List<MovingEntity> movingEntities = new ArrayList<MovingEntity>();
+		for(MovingEntity entity : entities.values())
+			movingEntities.add(entity);
+		return movingEntities;
+	}
+	
 	public List<Ghost> getGhosts() {
 		List<Ghost> ghosts = new ArrayList<Ghost>();
 		for(MovingEntity ghost : entities.values())
 			if(!Pacman.class.isInstance(ghost))
 				ghosts.add((Ghost) ghost);
 		return ghosts;
-	}
-	
-	public void frightenGhosts() {
-		for(Type entityType : entities.keySet())
-			if(entityType != Type.PACMAN)
-				((Ghost) entities.get(entityType)).frighten();
 	}
 	
 	public void reset() {

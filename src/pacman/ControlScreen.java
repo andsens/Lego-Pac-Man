@@ -27,15 +27,13 @@ public class ControlScreen extends JPanel implements KeyListener {
 		setLayout(null);
 //		setOpaque(false);
 		setBackground(Color.BLACK);
-		menuItems = new MenuItem[4];
+		menuItems = new MenuItem[3];
 		menuItems[0] = new MenuItem("NEW GAME", Option.NEWGAME);
 		menuItems[0].setLocation(50, Character.height);
-		menuItems[1] = new MenuItem("CONTINUE", Option.CONTINUE);
+		menuItems[1] = new MenuItem("OPTIONS", Option.OPTIONS);
 		menuItems[1].setLocation(50, Character.height*3);
-		menuItems[2] = new MenuItem("OPTIONS", Option.OPTIONS);
+		menuItems[2] = new MenuItem("EXIT", Option.EXIT);
 		menuItems[2].setLocation(50, Character.height*5);
-		menuItems[3] = new MenuItem("EXIT", Option.EXIT);
-		menuItems[3].setLocation(50, Character.height*7);
 		
 		arrow = new Character(new Point(), '-');
 		add(arrow);

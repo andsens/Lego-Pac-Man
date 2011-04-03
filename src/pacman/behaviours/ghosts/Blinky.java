@@ -32,4 +32,8 @@ public class Blinky extends GhostBehaviour {
 	protected int getDotLimit(int level) {
 		return 0;
 	}
+
+	protected Coordinate getGhostHouseTarget() {
+		return getPinky().getSpawnPoint();
+	}
 }

@@ -135,6 +135,20 @@ public class Character extends Graphic {
 		default:
 			throw new RuntimeException("Character '"+character+"' not recognized.");
 		}
+		switch(character) {
+		case '0':
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			location.translate(0, -2);
+			setLocation(location);
+		}
 	}
 	
 	public int getHeight() {
@@ -144,5 +158,4 @@ public class Character extends Graphic {
 	public int getWidth() {
 		return width;
 	}
-	
 }

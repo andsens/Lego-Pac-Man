@@ -49,4 +49,8 @@ public class Inky extends GhostBehaviour {
 			return 30;
 		return 0;
 	}
+
+	protected Coordinate getGhostHouseTarget() {
+		return entity.getSpawnPoint();
+	}
 }

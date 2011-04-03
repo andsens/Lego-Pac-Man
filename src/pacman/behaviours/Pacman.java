@@ -75,6 +75,6 @@ public class Pacman extends PacmanBehaviour implements KeyListener {
 	}
 
 	public void reset() {
-		nextHeading = Direction.NONE;
+		nextHeading = Direction.LEFT;
 	}
 }

@@ -39,4 +39,8 @@ public class Clyde extends GhostBehaviour {
 			return 60;
 		return 50;
 	}
+
+	protected Coordinate getGhostHouseTarget() {
+		return entity.getSpawnPoint();
+	}
 }

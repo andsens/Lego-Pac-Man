@@ -40,4 +40,8 @@ public class Pinky extends GhostBehaviour {
 	protected int getDotLimit(int level) {
 		return 0;
 	}
+
+	protected Coordinate getGhostHouseTarget() {
+		return entity.getSpawnPoint();
+	}
 }

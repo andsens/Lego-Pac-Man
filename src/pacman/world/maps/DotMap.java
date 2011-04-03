@@ -15,14 +15,19 @@ public class DotMap extends Map<Dot> {
 		populate(map);
 	}
 	
+	private Dot[][] dots;
+	private int dotsTotal;
 	public void populateMap(TypeMap map) {
 		Type[][] typeMap = map.getTypeMap();
+		dots = new Dot[map.getWidth()][map.getHeight()];
 		for(int x = 0; x < typeMap.length; x++) {
 			for(int y = 0; y < typeMap[x].length; y++) {
 				Point location = new Point(x*Tile.width, y*Tile.height);
 				Dot dot = typeMap[x][y].createDot(location);
 				if(dot == null)
 					continue;
+				dots[x][y] = dot;
+				dotsTotal++;
 				add(dot);
 			}
 		}
@@ -32,18 +37,19 @@ public class DotMap extends Map<Dot> {
 		for(Component entity : getComponents())
 			entity.setVisible(true);
 		dotsEaten = 0;
+		dotsLeft = dotsTotal;
 	}
-	
+
 	private int dotsEaten = 0;
+	private int dotsLeft = 0;
 	public Dot eat(Coordinate coordinate) {
-		Point location = new Point(coordinate.x*Tile.width, coordinate.y*Tile.height);
-		Object object = getComponentAt(location);
-		if(!Dot.class.isInstance(object))
+		Dot dot = dots[coordinate.x][coordinate.y];
+		if(dot == null)
 			return null;
-		Dot dot = (Dot) object;
 		if(dot.isVisible()) {
 			dot.setVisible(false);
 			dotsEaten++;
+			dotsLeft--;
 			return dot;
 		}
 		return null;
@@ -51,5 +57,9 @@ public class DotMap extends Map<Dot> {
 	
 	public int getDotsEaten() {
 		return dotsEaten;
+	}
+
+	public int getDotsLeft() {
+		return dotsLeft;
 	}
 }

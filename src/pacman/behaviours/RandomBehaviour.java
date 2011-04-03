@@ -27,4 +27,8 @@ public class RandomBehaviour extends GhostBehaviour {
 	protected void resetHeading() {
 		heading = Direction.LEFT;
 	}
+
+	protected Coordinate getGhostHouseTarget() {
+		return entity.getSpawnPoint();
+	}
 }
