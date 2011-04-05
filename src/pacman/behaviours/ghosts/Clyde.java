@@ -12,10 +12,6 @@ import pacman.world.maps.Direction;
  */
 public class Clyde extends GhostBehaviour {
 
-	public Clyde() {
-		resetHeading();
-	}
-	
 	public void resetHeading() {
 		heading = Direction.UP;
 	}

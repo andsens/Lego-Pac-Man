@@ -150,4 +150,11 @@ public enum Direction {
 			return NONE;
 		}
 	}
+	
+	public static Direction parseDirection(String direction) {
+		for(Direction dir : Direction.values())
+			if(direction.equals(dir.toString()))
+				return dir;
+		return null;
+	}
 }

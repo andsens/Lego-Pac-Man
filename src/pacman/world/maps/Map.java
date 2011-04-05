@@ -8,7 +8,7 @@ import pacman.world.tiles.Tile;
 public abstract class Map<T extends Graphic> extends JPanel {
 	
 	private static final long serialVersionUID = -6028301353603450607L;
-
+	
 	public Map(TypeMap map) {
 		setLayout(null);
 		setOpaque(false);

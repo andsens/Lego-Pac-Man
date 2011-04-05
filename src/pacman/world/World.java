@@ -42,9 +42,6 @@ public class World implements ActionListener {
 	public static final int timerSpeed = 10;
 	
 	private Timer timer;
-	private long tickCount = 0;
-	
-	private JFrame window;
 	
 	private BehaviourFactory behaviours;
 	
@@ -56,9 +53,10 @@ public class World implements ActionListener {
 	private OverlayMap overlayMap;
 
 	public World(JFrame window, BehaviourFactory behaviours) throws IOException {
-		this.window = window;
 		this.behaviours = behaviours;
 		behaviours.setWorld(this);
+		if(KeyListener.class.isInstance(behaviours.getController()))
+			window.addKeyListener((KeyListener) behaviours.getController());
 		
 		timer = new Timer(timerSpeed, this);
 		
@@ -93,6 +91,11 @@ public class World implements ActionListener {
 		layers.add(overlayMap, new Integer(6));
 		
 		layers.paintComponents(layers.getGraphics());
+	}
+
+	private long tickCount = 0;
+	public long getTickCount() {
+		return tickCount;
 	}
 	
 	int level = 0;
@@ -355,50 +358,51 @@ public class World implements ActionListener {
 	
 	int pauseFor = 0;
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == timer) {
-			if(pauseFor > 0) {
-				pauseFor--;
-				if(pauseFor == 0)
-					resumed();
-				else
-					return;
-			}
-			tickCount++;
-			if(pacmanDying) {
-				Pacman pacman = (Pacman) movingEntityMap.get(Type.PACMAN);
-				if(pacman.die(tickCount)) {
-					pacmanDying = false;
-					if(pacmanLives == 0) {
-						gameOver();
-					} else {
-						nextLife();
-					}
-					return;
-				}
-				for(Ghost ghost : movingEntityMap.getGhosts())
-					ghost.setVisible(false);
+		if (e.getSource() != timer)
+			return;
+		if(pauseFor > 0) {
+			pauseFor--;
+			behaviours.getController().listen(false);
+			if(pauseFor == 0)
+				resumed();
+			else
 				return;
-			}
-			if(dotMap.getDotsLeft() == 0) {
-				nextLevel();
-				return;
-			}
-			setGhostMode();
-			movingEntityMap.tick(tickCount);
-			ghoustHouseTimer();
-			
 		}
+		tickCount++;
+		if(pacmanDying) {
+			Pacman pacman = (Pacman) movingEntityMap.get(Type.PACMAN);
+			if(pacman.die(tickCount)) {
+				pacmanDying = false;
+				if(statusMap.getLives() == 0) {
+					gameOver();
+				} else {
+					nextLife();
+				}
+				return;
+			}
+			for(Ghost ghost : movingEntityMap.getGhosts())
+				ghost.setVisible(false);
+			return;
+		}
+		if(dotMap.getDotsLeft() == 0) {
+			nextLevel();
+			return;
+		}
+		setGhostMode();
+		movingEntityMap.tick(tickCount);
+		ghoustHouseTimer();
 	}
 	
 	private void resumed() {
 		statusMap.hideGhostScore();
 		for(MovingEntity entity : movingEntityMap.getEntities())
 			entity.setVisible(true);
+		statusMap.hideReady();
+		behaviours.getController().listen(true);
 	}
 	
-	private int pacmanLives = 3;
 	private void nextLife() {
-		pacmanLives--;
+		statusMap.subtractLife();
 		countGlobal = true;
 		globalDotCount = 0;
 		tickCount = 0;
@@ -417,6 +421,7 @@ public class World implements ActionListener {
 		movingEntityMap.reset();
 		overlayMap.reset();
 		pauseFor = (int) (1.5 * ticksPerSecond);
+		statusMap.showReady();
 	}
 	
 	private void gameOver() {
@@ -431,14 +436,12 @@ public class World implements ActionListener {
 	
 	public void unpause() {
 		timer.start();
-		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
-			window.addKeyListener((KeyListener) behaviours.getPacmanBehaviour());
+		behaviours.getController().listen(true);
 	}
 	
 	public void pause() {
 		timer.stop();
-		if(KeyListener.class.isInstance(behaviours.getPacmanBehaviour()))
-			window.removeKeyListener((KeyListener) behaviours.getPacmanBehaviour());
+		behaviours.getController().listen(false);
 	}
 	
 	public void reset() {

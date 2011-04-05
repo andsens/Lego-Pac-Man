@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 
 import pacman.MenuItem.Option;
+import pacman.behaviours.factories.PacmanWithMacros;
 import pacman.behaviours.factories.StandardPacmanBehaviours;
 import pacman.world.World;
 
@@ -29,7 +30,7 @@ public class Game extends JFrame implements KeyListener {
 		setResizable(false);
 		
 		state = State.STOPPED;
-		world = new World(this, new StandardPacmanBehaviours());
+		world = new World(this, new PacmanWithMacros());
 
 		JLayeredPane layers = getLayeredPane();
 		

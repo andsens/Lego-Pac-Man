@@ -13,10 +13,6 @@ import pacman.world.maps.Direction;
  */
 public class Pinky extends GhostBehaviour {
 
-	public Pinky() {
-		resetHeading();
-	}
-	
 	public void resetHeading() {
 		heading = Direction.DOWN;
 	}

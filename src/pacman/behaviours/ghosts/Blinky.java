@@ -12,12 +12,11 @@ import pacman.world.maps.Direction;
  */
 public class Blinky extends GhostBehaviour {
 	
-	public Blinky() {
-		resetHeading();
-	}
-	
 	public void resetHeading() {
-		heading = Direction.LEFT;
+		if(entity != null && isGhostHouse(entity.getCurrentTile()))
+			heading = Direction.UP;
+		else
+			heading = Direction.LEFT;
 	}
 	
 	protected Coordinate getChaseTarget() {

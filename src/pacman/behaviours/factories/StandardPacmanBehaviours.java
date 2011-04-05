@@ -1,6 +1,8 @@
 package pacman.behaviours.factories;
 
-import pacman.behaviours.Pacman;
+import pacman.behaviours.PacmanBehaviour;
+import pacman.behaviours.controllers.Controller;
+import pacman.behaviours.controllers.KeyboardController;
 import pacman.behaviours.ghosts.Blinky;
 import pacman.behaviours.ghosts.Clyde;
 import pacman.behaviours.ghosts.GhostBehaviour;
@@ -8,9 +10,13 @@ import pacman.behaviours.ghosts.Inky;
 import pacman.behaviours.ghosts.Pinky;
 
 public class StandardPacmanBehaviours extends BehaviourFactory {
-
-	protected Pacman getPacman() {
-		return new Pacman();
+	
+	protected PacmanBehaviour getPacman() {
+		return new PacmanBehaviour(getController());
+	}
+	
+	protected Controller getPacmanController() {
+		return new KeyboardController();
 	}
 
 	protected GhostBehaviour getBlinky() {

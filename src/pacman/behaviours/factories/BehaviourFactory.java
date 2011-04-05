@@ -1,6 +1,7 @@
 package pacman.behaviours.factories;
 
 import pacman.behaviours.PacmanBehaviour;
+import pacman.behaviours.controllers.Controller;
 import pacman.behaviours.ghosts.GhostBehaviour;
 import pacman.world.World;
 
@@ -8,6 +9,7 @@ public abstract class BehaviourFactory {
 	
 	public void setWorld(World world) {
 		getPacmanBehaviour().setWorld(world);
+		getController().setWorld(world);
 		getBlinkyBehaviour().setWorld(world);
 		getPinkyBehaviour().setWorld(world);
 		getInkyBehaviour().setWorld(world);
@@ -19,6 +21,13 @@ public abstract class BehaviourFactory {
 		if(pacman == null)
 			pacman = getPacman();
 		return pacman;
+	}
+	
+	Controller controller;
+	public final Controller getController() {
+		if(controller == null)
+			controller = getPacmanController();
+		return controller;
 	}
 	
 	GhostBehaviour blinky;
@@ -50,6 +59,7 @@ public abstract class BehaviourFactory {
 	}
 
 	protected abstract PacmanBehaviour getPacman();
+	protected abstract Controller getPacmanController();
 	protected abstract GhostBehaviour getBlinky();
 	protected abstract GhostBehaviour getPinky();
 	protected abstract GhostBehaviour getInky();

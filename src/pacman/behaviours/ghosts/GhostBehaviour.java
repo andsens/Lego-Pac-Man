@@ -13,6 +13,10 @@ import pacman.world.maps.Direction;
 
 public abstract class GhostBehaviour extends Behaviour {
 
+	public GhostBehaviour() {
+		resetHeading();
+	}
+	
 	private boolean reverseHeading = false;
 	private Direction nextHeading = heading;
 	public void think() {
@@ -21,8 +25,6 @@ public abstract class GhostBehaviour extends Behaviour {
 		boolean caged = isCaged();
 		if(dead) {
 			targetTile = getGhostHouseTarget();
-			if(isGhostHouse(currentTile) || isGhostHouseGate(currentTile))
-				caged = true;
 			if(targetTile.equals(entity.getCurrentTile())) {
 				dead = false;
 				resetHeading();
@@ -37,8 +39,8 @@ public abstract class GhostBehaviour extends Behaviour {
 		if(jailbreaking) {
 			targetTile = getGhostHouseEntrance();
 			if(targetTile.equals(entity.getCurrentTile())) {
-				caged = false;
 				jailbreaking = false;
+				heading = Direction.LEFT;
 			}
 		}
 		if(!dead && !caged) {
