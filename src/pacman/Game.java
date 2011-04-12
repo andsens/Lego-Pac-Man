@@ -30,7 +30,7 @@ public class Game extends JFrame implements KeyListener {
 		setResizable(false);
 		
 		state = State.STOPPED;
-		world = new World(this, new PacmanWithMacros());
+		world = new World(this, new StandardPacmanBehaviours());
 
 		JLayeredPane layers = getLayeredPane();
 		
