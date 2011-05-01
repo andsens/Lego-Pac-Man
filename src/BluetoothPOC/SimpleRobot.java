@@ -1,19 +1,15 @@
-package BluetoothPOC;
-
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import lejos.nxt.LCD;
-import lejos.nxt.Motor;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
+import tools.Car;
+import tools.Instructions;
 
-public class SimpleRobot {
-	private final static int MaxMoterPower 			= 100;
-	private final static int BitmaskMotorSelect 	= 0x80;	// 1000 0000
-	private final static int BitmaskMotorPower		= 0x7F;	// 0111 1111
-	private final static int FlagLeftMotor			= 0x00;	// 0000 0000
-	private final static int FlagRightMotor		= 0x80;	// 1000 0000
+public class Robot {
+	
+	public static int speed;
 	
 	public static void main(String[] args) {
 		LCD.drawString("Waiting for BT", 0, 0);
@@ -22,18 +18,25 @@ public class SimpleRobot {
 		// Enter reading loop
 		DataInputStream in = connection.openDataInputStream();
 		int read;
+		int line = 0;
+		LCD.clear();
 		try {
 			while ((read = in.read()) != -1) {
-				// Extract flag and motor power
-				int motor = read & BitmaskMotorSelect;
-				int power = read & BitmaskMotorPower;
 				
-				// Recalculate motor power
-				power = power * MaxMoterPower  / BitmaskMotorPower;
-				
-				// Execute action
-				if (motor == FlagLeftMotor) Motor.A.setPower(power);
-				else if (motor == FlagRightMotor) Motor.B.setPower(power);
+				// Display received value
+				if (line == 0)
+					LCD.clear();
+				LCD.drawInt(read, 0, line);
+				line = (line + 1) % 7;
+				switch (read) {
+		    	case Instructions.DOT: break; // TODO
+		    	case Instructions.LEFT: Car.forward(0, speed); break;
+		    	case Instructions.RIGHT: Car.forward(speed, 0); break;
+		    	case Instructions.START: Car.forward(speed, speed); break;
+		    	case Instructions.STOP: Car.stop(); break;
+		    	case Instructions.U_TURN: break; // TODO
+		    	default: if (read <= 100 && read >= 0) speed = read; Car.forward(speed, speed);
+		    	}
 			}
 		} catch (IOException e) {
 			LCD.clearDisplay();
