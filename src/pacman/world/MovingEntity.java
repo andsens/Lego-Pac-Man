@@ -1,6 +1,8 @@
 package pacman.world;
 
 import java.awt.Point;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import pacman.behaviours.Behaviour;
 import pacman.world.maps.Coordinate;
@@ -68,11 +70,17 @@ public abstract class MovingEntity extends Entity implements Changeable  {
 	
 	protected abstract void think();
 	
+	Queue<Direction> moveHistory = new LinkedList<Direction>();
 	protected void move() {
 		Direction heading = getHeading();
 		Point location = getLocation();
 		heading.translate(location);
 		setLocation(location);
+		moveHistory.add(heading);
+	}
+	
+	public Direction getNextMove() {
+		return moveHistory.poll();
 	}
 	
 	protected abstract void act();

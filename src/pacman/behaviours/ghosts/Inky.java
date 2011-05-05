@@ -19,16 +19,19 @@ public class Inky extends GhostBehaviour {
 	
 	protected Coordinate getChaseTarget() {
 		MovingEntity pacman = getPacman();
-		MovingEntity blinky = getBlinky();
-		
+		MovingEntity dependency = getBlinky();
+		if(dependency == null)
+			dependency = getPinky();
+		if(dependency == null)
+			dependency = getClyde();
 		Coordinate targetTile = pacman.getCurrentTile();
 		heading.translate(targetTile, 2);
 		if(heading == Direction.UP) // Simulate the buffer overflow from the original
 			heading.turn().translate(targetTile, 2);
 		
-		Coordinate blinkyTile = blinky.getCurrentTile();
-		int vectorX = targetTile.x-blinkyTile.x;
-		int vectorY = targetTile.y-blinkyTile.y;
+		Coordinate dependencyTile = dependency.getCurrentTile();
+		int vectorX = targetTile.x-dependencyTile.x;
+		int vectorY = targetTile.y-dependencyTile.y;
 		
 		targetTile.translate(vectorX, vectorY);
 		capTileLocation(targetTile);

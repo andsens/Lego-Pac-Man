@@ -22,7 +22,7 @@ public class Game extends JFrame implements KeyListener {
 	private World world;
 	private ControlScreen controlScreen;
 	
-	public Game() throws IOException {
+	public Game(File mapFile) throws IOException {
 		
 		setTitle("Pac-Man");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -30,7 +30,7 @@ public class Game extends JFrame implements KeyListener {
 		setResizable(false);
 		
 		state = State.STOPPED;
-		world = new World(this, new StandardPacmanBehaviours());
+		world = new World(this, new StandardPacmanBehaviours(), mapFile);
 
 		JLayeredPane layers = getLayeredPane();
 		
@@ -107,7 +107,12 @@ public class Game extends JFrame implements KeyListener {
 	
 	public static void main(String[] args) {
 		try {
-			new Game();
+			File mapFile;
+			if(args.length == 0)
+				mapFile = new File("maps/classic.txt");
+			else
+				mapFile = new File(args[0]);
+			new Game(mapFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

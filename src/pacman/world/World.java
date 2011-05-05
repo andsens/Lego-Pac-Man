@@ -52,7 +52,7 @@ public class World implements ActionListener {
 	private StatusMap statusMap;
 	private OverlayMap overlayMap;
 
-	public World(JFrame window, BehaviourFactory behaviours) throws IOException {
+	public World(JFrame window, BehaviourFactory behaviours, File mapFile) throws IOException {
 		this.behaviours = behaviours;
 		behaviours.setWorld(this);
 		if(KeyListener.class.isInstance(behaviours.getController()))
@@ -60,7 +60,7 @@ public class World implements ActionListener {
 		
 		timer = new Timer(timerSpeed, this);
 		
-		map = new TypeMap(new File("maps/classic.txt"));
+		map = new TypeMap(mapFile);
 		
 		Sprite sprite = new Sprite("sprite.png");
 		Graphic.setSprite(sprite);
@@ -226,14 +226,17 @@ public class World implements ActionListener {
 			globalDotCount++;
 			switch(globalDotCount) {
 			case 7:
-				pinky.jailbreak();
+				if(pinky != null)
+					pinky.jailbreak();
 				break;
 			case 17:
-				inky.jailbreak();
+				if(inky != null)
+					inky.jailbreak();
 				break;
 			case 32:
-				if(isGhostHouse(clyde.getCurrentTile())
-				|| isGhostHouseGate(clyde.getCurrentTile())) {
+				if(clyde != null
+				&& (isGhostHouse(clyde.getCurrentTile())
+				|| isGhostHouseGate(clyde.getCurrentTile()))) {
 					clyde.jailbreak();
 					globalDotCount = 0;
 					countGlobal = false;
@@ -242,13 +245,13 @@ public class World implements ActionListener {
 			}
 			return;
 		}
-		if(blinky.countDot(level))
+		if(blinky != null && blinky.countDot(level))
 			return;
-		if(pinky.countDot(level))
+		if(pinky != null && pinky.countDot(level))
 			return;
-		if(inky.countDot(level))
+		if(inky != null && inky.countDot(level))
 			return;
-		if(clyde.countDot(level))
+		if(clyde != null && clyde.countDot(level))
 			return;
 	}
 	
@@ -294,13 +297,13 @@ public class World implements ActionListener {
 		long lastDotEatenThreshold = level <= 4 ? 4 * ticksPerSecond : 3 * ticksPerSecond;
 		if(tickCount - lastDotEaten > lastDotEatenThreshold) {
 			lastDotEaten = tickCount;
-			if(blinky.jailbreak())
+			if(blinky != null && blinky.jailbreak())
 				return;
-			if(pinky.jailbreak())
+			if(pinky != null && pinky.jailbreak())
 				return;
-			if(inky.jailbreak())
+			if(inky != null && inky.jailbreak())
 				return;
-			if(clyde.jailbreak())
+			if(clyde != null && clyde.jailbreak())
 				return;
 		}
 	}

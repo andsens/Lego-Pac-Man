@@ -1,0 +1,76 @@
+// o = out of bounds
+// e = Empty tile
+// g = Ghosthouse
+// G = Ghosthouse Barrier
+// F = Ghosthouse Barrier (oob)
+// D = Dot
+// E = Energizer
+// P = Pacman
+// B = Blinky
+// p = Pinky
+// I = Inky
+// C = Clyde
+// u = Wall up
+// l = Wall left
+// d = Wall Down
+// r = Wall right
+// U = Wall up left
+// L = Wall Down left
+// R = Wall Down right
+// x = Wall up right
+// H = Wall up (double)
+// h = Wall down (double)
+// V = Wall left (double)
+// v = Wall right (double)
+// y = Wall up left (double)
+// z = Wall down left (double)
+// w = Wall up right (double)
+// t = Wall down right (double)
+// j = Wall up left (double, rectangular)
+// q = Wall down left (double, rectangular)
+// k = Wall up right (double, rectangular)
+// s = Wall down right (double, rectangular)
+// m = Wall up stop right (double, rectangular)
+// n = Wall up stop left (double, rectangular)
+// f = Wall split down right
+// a = Wall split down left
+// h = Wall split left up
+// b = Wall split left down
+// i = Wall split right up
+// c = Wall split right down
+// Z = Red zone tile
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+ooooooooyhhhhhhhhhhhwooooooo
+oooooooovDeeeBeeDDDEVooooooo
+oooooooovDjmFGnkeUxDVooooooo
+oooooooovDVIgpgvelrDVooooooo
+oooooooovDVgoggvelrDVooooooo
+oooooooovDqhhhhselrDVooooooo
+oooooooovDDDDDDeelrDVooooooo
+oooooooovDUuuxDUuRrDVooooooo
+oooooooovDLddRDLddRDVooooooo
+oooooooovDDDDDZDDDDDVooooooo
+oooooooovDUuuuuuuuxDVooooooo
+oooooooovDLdddddddRDVooooooo
+oooooooovDDDDDPDDDDDVooooooo
+oooooooozHHHHHHHHHHHtooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooo
