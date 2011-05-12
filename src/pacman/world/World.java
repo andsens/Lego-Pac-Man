@@ -20,6 +20,7 @@ import pacman.world.maps.Coordinate;
 import pacman.world.maps.DotMap;
 import pacman.world.maps.MovingEntityMap;
 import pacman.world.maps.OverlayMap;
+import pacman.world.maps.RobotMap;
 import pacman.world.maps.StatusMap;
 import pacman.world.maps.Type;
 import pacman.world.maps.TypeMap;
@@ -51,6 +52,7 @@ public class World implements ActionListener {
 	private MovingEntityMap movingEntityMap;
 	private StatusMap statusMap;
 	private OverlayMap overlayMap;
+	private RobotMap robotMap;
 
 	public World(JFrame window, BehaviourFactory behaviours, File mapFile) throws IOException {
 		this.behaviours = behaviours;
@@ -89,6 +91,10 @@ public class World implements ActionListener {
 		
 		overlayMap = new OverlayMap(map);
 		layers.add(overlayMap, new Integer(6));
+
+		robotMap = new RobotMap(map, movingEntityMap.getEntities());
+		robotMap.setWorld(this);
+		layers.add(robotMap, new Integer(7));
 		
 		layers.paintComponents(layers.getGraphics());
 	}

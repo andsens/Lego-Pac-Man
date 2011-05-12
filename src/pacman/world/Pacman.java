@@ -26,6 +26,10 @@ public class Pacman extends MovingEntity {
 		spriteTile = new Point(0, 16);
 	}
 	
+	public String getName() {
+		return "Pacman";
+	}
+	
 	protected Point getOffset() {
 		return new Point(1, -5);
 	}

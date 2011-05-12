@@ -21,6 +21,7 @@ public class Ghost extends MovingEntity {
 	protected GhostBehaviour behaviour;
 	private Point baseTile;
 	
+	private String name = "unnamed";
 	public Ghost(Point location, GhostBehaviour behaviour, Type type) {
 		super(location);
 		this.behaviour = behaviour;
@@ -28,18 +29,26 @@ public class Ghost extends MovingEntity {
 		switch(type) {
 		case BLINKY:
 			baseTile = new Point(0, 14);
+			name = "Blinky";
 			break;
 		case PINKY:
 			baseTile = new Point(0, 18);
+			name = "Pinky";
 			break;
 		case INKY:
 			baseTile = new Point(16, 18);
+			name = "Inky";
 			break;
 		case CLYDE:
 			baseTile = new Point(0, 20);
+			name = "Clyde";
 			break;
 		}
 		spriteTile = baseTile;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	protected Point getOffset() {
