@@ -5,6 +5,7 @@
 	<classpathentry kind="lib" path="lib/jtools.jar"/>
 	<classpathentry kind="lib" path="lib/pccomm.jar"/>
 	<classpathentry kind="lib" path="lib/pctools.jar"/>
-	<classpathentry kind="lib" path="/Volumes/Anders/Workspace/Lego-Pac-Man/lib/bluecove-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/bluecove-2.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/classes.jar" sourcepath="lib/classes.src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
