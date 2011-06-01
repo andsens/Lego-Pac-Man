@@ -15,7 +15,7 @@ import lejos.pc.comm.NXTInfo;
  */
 public class InstructionSender {
 	
-	private static OutputStream out;
+	private OutputStream out;
 	
 	public InstructionSender() {
 	}
@@ -94,5 +94,9 @@ public class InstructionSender {
 	public void makeUTurn() throws IOException {
 		out.write(Instructions.U_TURN);
 		out.flush();
+	}
+	
+	public void close() throws IOException {
+		out.close();
 	}
 }

@@ -29,10 +29,10 @@ public class SimpleRemote extends JFrame implements KeyListener {
 	
 	public SimpleRemote() {
 		try {
-			sender = new InstructionSender("NXT");
+			sender = new InstructionSender("INKY");
 		} catch (NXTCommException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(1);
 		}
 		this.addKeyListener(this);
 		this.setSize(100, 100);
@@ -45,33 +45,26 @@ public class SimpleRemote extends JFrame implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 		System.out.println("Pressed "+e.getKeyCode());
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_RIGHT: try {
+		try {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP:
+				sender.start();
+				break;
+			case KeyEvent.VK_RIGHT: 
 				sender.turnRight();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} break;
-		case KeyEvent.VK_LEFT: try {
+				break;
+			case KeyEvent.VK_LEFT:
 				sender.turnLeft();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} break;
-		case KeyEvent.VK_UP: try {
-				sender.setSpeed(speed+=10);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} break;
-		case KeyEvent.VK_DOWN: try {
-				sender.setSpeed(speed-=10);
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} break;
-		case KeyEvent.VK_ESCAPE: System.exit(0); break;
-		default: break;
+				break;
+			case KeyEvent.VK_ESCAPE:
+				sender.stop();
+				sender.close();
+				System.exit(0); break;
+			default: break;
+		}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			System.exit(1);
 		}
 	}
 
